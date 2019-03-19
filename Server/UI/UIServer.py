@@ -4,7 +4,8 @@ import os
 import urllib
 from time import sleep
 import glob
-
+#Common Class that are going to be used
+from Common import User, DroneConfigurations, Mission
 
 
 app = Flask(__name__)
@@ -13,8 +14,29 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 
+
 @app.route('/missionDetails', methods=['POST'])
 def main():
+	#user details
+	user = User(request.json['UserID'])
+	#user.setName(request.json['UserName'])
+	#user.setSurname(request.json['UserSurname'])
+
+	#drone details
+	drone = DroneConfigurations()
+	drone.setPath(request.json['DronePath'])
+	drone.setSpeed(request.json['DroneSpeed'])
+	drone.setHeight(request.json['DroneHeight'])
+
+	#newMission details
+	mission = Mission(drone, user)
+	mission.setMissionStartTime(request.json['MissinoStartTime'])
+
+	print("Print the user details, drone details, and finally mission details")
+	print(user)
+	print(drone)
+	print(mission)
+
 	return
 
 

@@ -5,7 +5,7 @@ class Mission :
 	def __init__(self, drone, user):
         self.MissionTime =  0
         self.DroneConfigurations = drone
-        slef.userID = user.ID
+        slef.userID = user.getID()
 
 	#set the mission start time
 	def setMissionStartTime(startTime):
