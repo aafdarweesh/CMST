@@ -5,25 +5,25 @@ class DroneConfigurations:
         self.Speed = 3 #m/s
 
     #set the path of the drone
-    def setPath(path):
+    def setPath(self, path):
         self.Path = path
 
     #set the height of the drone
-    def setHeight(height):
+    def setHeight(self, height):
         self.Height = height
 
     #set the speed of the drone
-    def setSpeed(speed):
+    def setSpeed(self, speed):
         self.Speed = speed
 
     #get the path of the drone
-    def getPath():
+    def getPath(self):
         return self.Path
 
     #get the height of the drone
-    def getHeight():
+    def getHeight(self):
         return self.Height
 
     #get the speed of the drone
-    def getSpeed():
+    def getSpeed(self):
         return self.Speed

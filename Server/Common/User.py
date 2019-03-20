@@ -5,21 +5,21 @@ class User:
         self.ID = ID
 
     #set the name of the user
-    def setName(name):
+    def setName(self, name):
         self.Name = name
 
     #set the surname of the user
-    def setSurname(surname):
-        self.surname
+    def setSurname(self, surname):
+        self.Surname = surname
 
     #get the ID of the user
-    def getID():
+    def getID(self):
         return self.ID
 
     #get the Name of the user
-    def getName():
+    def getName(self):
         return self.Name
 
     #get the Surname of the user
-    def getSurname():
+    def getSurname(self):
         return self.Surname

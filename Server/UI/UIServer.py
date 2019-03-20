@@ -4,9 +4,14 @@ import os
 import urllib
 from time import sleep
 import glob
-#Common Class that are going to be used
-from Common import User, DroneConfigurations, Mission
 
+import sys
+sys.path.append('../Common/')
+#sys.path.append('../Common/')
+#Common Class that are going to be used
+import User, DroneConfigurations, Mission
+
+dummyUser = User(5)
 
 app = Flask(__name__)
 #CORS(app)
@@ -16,9 +21,10 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 @app.route('/missionDetails', methods=['POST'])
-def main():
+def missionDetails():
 	#user details
-	user = User(request.json['UserID'])
+	print(request.json["UserID"])
+	user = User(int(request.json["UserID"]))
 	#user.setName(request.json['UserName'])
 	#user.setSurname(request.json['UserSurname'])
 
@@ -37,10 +43,7 @@ def main():
 	print(drone)
 	print(mission)
 
-	return
-
-
-
+	return jsonify({'mission' : str(mission)})
 
 
 
