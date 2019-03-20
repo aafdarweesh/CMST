@@ -29,8 +29,13 @@ Mission details Json content
 }
 '''
 
-@app.route('/missionDetails', methods=['POST'])
-def missionDetails():
+@app.route('/assignNewMission', methods=['POST'])
+def assignNewMission():
+
+	#from the database get the value of the mission ID
+	#missionID not from the user
+	missionID = 0
+
 	#user details
 	user = User.User(int(request.json["UserID"]))
 	#user.setName(request.json['UserName'])
@@ -39,17 +44,14 @@ def missionDetails():
 	#drone details
 	drone = DroneConfigurations.DroneConfigurations()
 	drone.setPath(request.json['DronePath'])
-	drone.setSpeed(request.json['DroneSpeed'])
-	drone.setHeight(request.json['DroneHeight'])
+	drone.setSpeed(int(request.json['DroneSpeed']))
+	drone.setHeight(int(request.json['DroneHeight']))
 
 	#newMission details
-	mission = Mission.Mission(drone, user)
+	mission = Mission.Mission(drone, user, missionID)
 	mission.setMissionStartTime(request.json['MissinoStartTime'])
 
 	return jsonify({'Mission start time' : mission.getMissionStartTime()})
-
-
-
 
 
 
