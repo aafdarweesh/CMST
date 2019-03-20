@@ -4,7 +4,7 @@ import os
 import urllib
 from time import sleep
 import glob
-
+import json
 import sys
 sys.path.append('../Common/')
 
@@ -16,8 +16,18 @@ app = Flask(__name__)
 #CORS(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
+'''
+Mission details Json content
 
+{
+	"UserID" : "1",
+	"DronePath" : {"a":"a", "b":"b"},
+	"DroneSpeed": "3",
+	"DroneHeight" : "10",
+	"MissinoStartTime" : "2019-03-20 23:05:24.310928'"
 
+}
+'''
 
 @app.route('/missionDetails', methods=['POST'])
 def missionDetails():
@@ -36,7 +46,10 @@ def missionDetails():
 	mission = Mission.Mission(drone, user)
 	mission.setMissionStartTime(request.json['MissinoStartTime'])
 
-	return jsonify({'mission' : mission})
+	return jsonify({'Mission start time' : mission.getMissionStartTime()})
+
+
+
 
 
 
