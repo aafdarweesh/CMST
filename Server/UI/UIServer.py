@@ -7,12 +7,11 @@ import glob
 
 import sys
 sys.path.append('../Common/')
-#sys.path.append('../Common/')
+
 #Common Class that are going to be used
 import User, DroneConfigurations, Mission
 
-dummyUser = User(5)
-
+#Initialize the server "as flask object"
 app = Flask(__name__)
 #CORS(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -23,27 +22,21 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 @app.route('/missionDetails', methods=['POST'])
 def missionDetails():
 	#user details
-	print(request.json["UserID"])
-	user = User(int(request.json["UserID"]))
+	user = User.User(int(request.json["UserID"]))
 	#user.setName(request.json['UserName'])
 	#user.setSurname(request.json['UserSurname'])
 
 	#drone details
-	drone = DroneConfigurations()
+	drone = DroneConfigurations.DroneConfigurations()
 	drone.setPath(request.json['DronePath'])
 	drone.setSpeed(request.json['DroneSpeed'])
 	drone.setHeight(request.json['DroneHeight'])
 
 	#newMission details
-	mission = Mission(drone, user)
+	mission = Mission.Mission(drone, user)
 	mission.setMissionStartTime(request.json['MissinoStartTime'])
 
-	print("Print the user details, drone details, and finally mission details")
-	print(user)
-	print(drone)
-	print(mission)
-
-	return jsonify({'mission' : str(mission)})
+	return jsonify({'mission' : mission})
 
 
 
