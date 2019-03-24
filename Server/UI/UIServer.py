@@ -51,6 +51,10 @@ def assignNewMission():
 	mission = Mission.Mission(drone, user, missionID)
 	mission.setMissionStartTime(request.json['MissinoStartTime'])
 
+
+	#assignNewMission (save it in the storage)
+
+
 	return jsonify({'Mission start time' : mission.getMissionStartTime()})
 
 
