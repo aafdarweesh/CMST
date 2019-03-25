@@ -19,15 +19,36 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 rPi = RaspberryPi.RaspberryPi()
 
 
-app.route('/UpdateIP', methods=['POST'])
+
+def sendPiMessage():
+
+    global rPi
+
+    #encode the data
+    data1 = json.dumps({'HELLO WORLD' :  rPi.getSerialNumber()})
+    data1 = data1.encode('ascii') # data should be bytes
+
+    req = urllib.request.Request(url='http://' + rPi.getIP() + ':8082/TestSerialNumber', data=data1, headers={'content-type': 'application/json'}, method='POST')
+
+    with urllib.request.urlopen(req) as f:
+        print(f.read().decode("utf-8"))
+        pass
+    return
+
+
+
+@app.route('/UpdateIP', methods=['POST'])
 def UpdateIP():
 
     global rPi
+    print("anything ")
 
     rPi.setSerialNumber(request.json['serialNumber'])
     rPi.setIP(request.remote_addr)
 
-    return jsonify({'SerialNumber' : rPi.getSerialNumber, 'IP' : rPi.getIP()})
+    sendPiMessage()
+
+    return jsonify({'SerialNumber' : rPi.getSerialNumber(), 'IP' : rPi.getIP()})
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', debug=True, port=8081)
+	app.run(host='localhost', debug=True, port=8081)
