@@ -11,6 +11,8 @@ sys.path.append('../Common/')
 #Common Class that are going to be used
 import User, DroneConfigurations, Mission, RaspberryPi
 
+import requests
+
 #Initialize the server "as flask object"
 app = Flask(__name__)
 #CORS(app)
@@ -39,7 +41,7 @@ def sendPiMessage():
 def assignMission(serialNumber):
     #get the new mission details from the storage for the given RaspberryPi
     '''
-    req = urllib.request.Request(url='http://StorageIP:8082/RetreiveMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
+    req = urllib.request.Request(url='http://StorageIP:8082/RetrieveMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
 
     with urllib.request.urlopen(req) as f:
         print(f.read().decode("utf-8"))
@@ -88,6 +90,17 @@ def UpdateStatus():
     #the updated list of videos will be sent back to the RaspberryPi, to delete the already received videos
     #incase of a failure the RaspberryPi will manage it according to the scenario
 
+
+
+
+
+    print("received data from RPiClient IP : " + str(request.remote_addr) + " : ")
+    print(request.json)
+    url = 'http://localhost:8082'
+    storageData = requests.get(url + "/ListOfReceivedVideos")
+    data = {'listOfReceivedVideos' : json.loads(storageData.text)['listOfReceivedVideos']}
+    #print(jsonify(json.dumps(data)))
+    return json.dumps(data)
 
 
 if __name__ == '__main__':
