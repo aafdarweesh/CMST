@@ -1,5 +1,5 @@
-class User:
-    def __init__(self, ID):
+class RaspberryPi:
+    def __init__(self):
         self.SerialNumber = ""
         self.IP = ""
 

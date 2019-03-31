@@ -12,10 +12,15 @@ class Mission :
 		self.DroneConfigurations = drone
 		self.UserID = user.getID()
 		self.MissionID =  missionID
+		self.EstimatedMissionDuration = 0
 
 	#set the mission start time
 	def setMissionStartTime(self, startTime):
 		self.MissionTime = startTime
+
+	#set estimated mission duration
+	def setEstimatedMissionDuration(self, duration):
+		self.EstimatedMissionDuration = duration
 
 	#get mission id
 	def getMissionID(self):
@@ -24,3 +29,7 @@ class Mission :
 	#get the mission start time
 	def getMissionStartTime(self):
 		return self.MissionTime
+
+	#get estimated mission duration
+	def getEstimatedMissionDuration(self):
+		return self.EstimatedMissionDuration

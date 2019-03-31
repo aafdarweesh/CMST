@@ -81,12 +81,12 @@ def UpdateIP():
 
 
 #Status method is responsible for checking the Synchronization between the RaspberryPi data and the storage "which detection system evoke"
-@app.route('/UpdateStatus', methods=['PUT'])
+@app.route('/UpdateStatus', methods=['POST'])
 def UpdateStatus():
     #The Json file contains the number of videos generated, a list of sent videos to the detection system, new RaspberryPi IP, and mission ID"
     #The method checks the data with the storage and Detection system, and update the list of the videos
     #the updated list of videos will be sent back to the RaspberryPi, to delete the already received videos
-    #incase of a failure the RaspberryPi will manage it according to the scenario 
+    #incase of a failure the RaspberryPi will manage it according to the scenario
 
 
 
