@@ -27,10 +27,12 @@ def RPiClientTest():
     #startMission Request
     data = {'missionID' : '1', 'EstimatedMissionDuration' : '100'}
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    req = requests.post(url+"/startMission", data=json.dumps(data), headers=headers)
+    try :
+        req = requests.post(url+"/startMission", data=json.dumps(data), headers=headers)
 
-    print("RPiClient startMission status : " + str(req.status_code) + " !!!")
-
+        print("RPiClient startMission status : " + str(req.status_code) + " !!!")
+    except :
+        print("Couldn't connect to RaspberryPi to start new mission !!!")
     #Retrieve logFile
     try:
         r = urllib.request.urlretrieve(url + "/logFile", "logFile.txt")
@@ -62,7 +64,7 @@ def ReceiveVideo():
 #This function will be moved to the storage system, as it will Retrieve a list of received videos for that mission
 @app.route('/ListOfReceivedVideos', methods=['GET'])
 def GetListOfReceivedVideos():
-    data = {'listOfReceivedVideos' : ['0','1','2']}
+    data = {'listOfReceivedVideos' : ['0','1','2','3']}
     return json.dumps(data)
 
 
