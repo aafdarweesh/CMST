@@ -97,8 +97,13 @@ def UpdateStatus():
     print("received data from RPiClient IP : " + str(request.remote_addr) + " : ")
     print(request.json)
     url = 'http://localhost:8082'
-    storageData = requests.get(url + "/ListOfReceivedVideos")
-    data = {'listOfReceivedVideos' : json.loads(storageData.text)['listOfReceivedVideos']}
+    data = {'listOfReceivedVideos' : []}
+    try :
+        storageData = requests.get(url + "/ListOfReceivedVideos")
+        data['listOfReceivedVideos'] = json.loads(storageData.text)['listOfReceivedVideos']
+        print("connected to the storage server!!!")
+    except :
+        print("Couldn't connect to the storage server!!!")
     #print(jsonify(json.dumps(data)))
     return json.dumps(data)
 
