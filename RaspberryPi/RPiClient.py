@@ -45,16 +45,13 @@ def startMission():
         #logFile.write("Couldn't Retrieve Mission details (EstimatedMissionDuration)!!!")
         print("Couldn't Retrieve Mission details (EstimatedMissionDuration)!!!")
     try:
-<<<<<<< HEAD
         #os.system('pkill -9 ./StartRecording.py')
         #os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos))
-=======
         os.system('pkill -9 ./startRecording.py')
         os.system('python ./startRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos))
->>>>>>> 485068b38ecdd4a22dbb23582d71951f0b26266c
         #logFile.write("startRecording runs successfully!!!")
         print("StartRecording runs successfully!!!")
-        
+
         #updateStatusWithServer() #update the status of the system every 3 seconds with the server
         os.system('pkill -9 ./ServerTransmission.py')
         os.system('python ./ServerTransmission.py ' + str(numberOfVideos))
