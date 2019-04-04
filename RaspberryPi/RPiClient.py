@@ -54,6 +54,7 @@ def startMission():
 >>>>>>> 485068b38ecdd4a22dbb23582d71951f0b26266c
         #logFile.write("startRecording runs successfully!!!")
         print("StartRecording runs successfully!!!")
+        
         #updateStatusWithServer() #update the status of the system every 3 seconds with the server
         os.system('pkill -9 ./ServerTransmission.py')
         os.system('python ./ServerTransmission.py ' + str(numberOfVideos))
