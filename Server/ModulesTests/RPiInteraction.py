@@ -26,6 +26,11 @@ def RPiClientTest():
 
     #startMission Request
     data = {'missionID' : '1', 'EstimatedMissionDuration' : '100'}
+
+    print("assignNewMission")
+    print(data)
+
+
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     try :
         req = requests.post(url+"/startMission", data=json.dumps(data), headers=headers)

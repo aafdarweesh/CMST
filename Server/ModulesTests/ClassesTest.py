@@ -48,10 +48,10 @@ print("\n\n\n")
 
 #test Mission
 print("Mission Test:")
-mission = Mission.Mission(drone, user)
+mission = Mission.Mission(drone, user,1)
 
 #before
-print("Test MissionStartTime : "" == " + mission.getMissionStartTime())
+print("Test MissionStartTime :  == " + mission.getMissionStartTime())
 
 print("-----------------------------------------------------")
 
