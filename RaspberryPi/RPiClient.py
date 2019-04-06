@@ -45,10 +45,10 @@ def startMission():
         #logFile.write("Couldn't Retrieve Mission details (EstimatedMissionDuration)!!!")
         print("Couldn't Retrieve Mission details (EstimatedMissionDuration)!!!")
     try:
-        #os.system('pkill -9 ./StartRecording.py')
-        #os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos))
-        os.system('pkill -9 ./startRecording.py')
-        os.system('python ./startRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos))
+        os.system('pkill -9 ./StartRecording.py')
+        os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos))
+        #os.system('pkill -9 ./startRecording.py')
+        #os.system('python ./startRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos))
         #logFile.write("startRecording runs successfully!!!")
         print("StartRecording runs successfully!!!")
 
@@ -80,4 +80,17 @@ def deleteAllVideos():
 
 
 if __name__ == '__main__':
+    url = "http://172.0.0.1:8081" #url of the RPiClient
+    #startMission Request
+    data = {'serialNumber' : '100'}
+    print(data)
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    try :
+        req = requests.post(url+"/UpdateIP", data=json.dumps(data), headers=headers)
+
+        print("RPiClient UpdateIP : " + str(req.status_code) + " !!!")
+    except :
+        print("Couldn't connect to RPiServer to Update the IP !!!")
+
+
 	app.run(host='localhost', debug=True, port=8083)
