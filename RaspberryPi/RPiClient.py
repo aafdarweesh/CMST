@@ -69,6 +69,7 @@ def tripMetaData():
     return send_file("./logFile.txt")
 
 
+
 #delete all videos in the local buffer (and confirm the operation)
 @app.route('/AfterTripDeletion',methods=['DELETE'])
 def deleteAllVideos():
