@@ -66,6 +66,34 @@ def assignMission(serialNumber):
     else :
         return res
 
+
+
+@app.route('/RaspberryPiClientTest', methods=['POST'])
+def RPiClientTest():
+
+    rPiAddress = open('RPiIPAddress.txt', 'r')
+    address = rPiAddress.read()
+
+    url = "http://" + str(address) + ":8083" #url of the RPiClient
+
+    #startMission Request
+    data = {'missionID' : '1', 'EstimatedMissionDuration' : '100'}
+
+    print("assignNewMission")
+    print(data)
+
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    try :
+        req = requests.post(url+"/startMission", data=json.dumps(data), headers=headers)
+
+        print("RPiClient startMission status : " + str(req.status_code) + " !!!")
+    except :
+        print("Couldn't connect to RaspberryPi to start new mission !!!")
+
+    #print(request.data)
+    return 'Thank you !!!'
+
+
 #This request is evoked once the RaspberryPi is on and connected to the internet to update the IP with the server
 @app.route('/UpdateIP', methods=['POST'])
 def UpdateIP():
@@ -76,7 +104,11 @@ def UpdateIP():
     rPi.setSerialNumber(request.json['serialNumber'])
     rPi.setIP(request.remote_addr)
     #to check that the stored IP is the IP of the RaspberryPi that we need to evoke
-    sendPiMessage()
+    #sendPiMessage()
+
+    rPiAddress = open('RPiIPAddress.txt', 'w')
+    rPiAddress.write(request.remote_addr)
+
 
     return jsonify({'SerialNumber' : rPi.getSerialNumber(), 'IP' : rPi.getIP()})
 
