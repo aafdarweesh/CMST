@@ -80,7 +80,18 @@ def deleteAllVideos():
                 return {'False'}
 
 
+'''
+new Mission json
+{
+"newMissionFlag" : True,
+"missionID" : 0,
+"EstimatedMissionDuration":100,
+"flightConfigurations":{"height" : 10, "locations":[]}
+}
+'''
+
 if __name__ == '__main__':
+
     url = "http://172.0.0.1:8081" #url of the RPiClient
     #startMission Request
     data = {'serialNumber' : '100'}
@@ -94,4 +105,19 @@ if __name__ == '__main__':
         print("Couldn't connect to RPiServer to Update the IP !!!")
 
 
+    '''
+    url = "http://172.0.0.1:8081" #url of the RPiServer
+    #getMission Request
+    data = {'serialNumber' : '100'}
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    flag = False
+    while flag == False:
+        try:
+            req = requests.post(url+"/getNewMission", data=json.dumps(data), headers=headers)
+            req_json = req.json()
+            flag = req.json['newMissionFlag']
+            print("RPiClient get the new Mission : " + str(req.status_code) + " !!!")
+        except:
+            print("Couldn't connect to RPiServer to get the new Mission !!!")
+    '''
 	app.run(host='localhost', debug=True, port=8083)

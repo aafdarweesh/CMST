@@ -36,9 +36,20 @@ def sendPiMessage():
         pass
     return
 
-
+'''
+new Mission json
+{
+"newMissionFlag" : true,
+"missionID" : 0,
+"serialNumber" : 123,
+"EstimatedMissionDuration":100,
+"flightConfigurations":{"height" : 10, "locations":[]}
+}
+'''
+#reference : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
+@app.route('/assignNewMission', methods=['POST'])
 #assign the new mission to the RaspberryPi, this method will be invoked upon update on the DB for new mission
-def assignMission(serialNumber):
+def assignMission():
     #get the new mission details from the storage for the given RaspberryPi
     '''
     req = urllib.request.Request(url='http://StorageIP:8082/RetrieveMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
@@ -52,6 +63,8 @@ def assignMission(serialNumber):
 
 
     #encode the data
+    #uncomment if we are using VPN to connect with the Pi
+    '''
     newMission = newMission.encode('ascii') # data should be bytes
 
     req = urllib.request.Request(url='http://' + rPi.getIP() + ':8000/NewMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
@@ -66,6 +79,31 @@ def assignMission(serialNumber):
     else :
         return res
 
+    '''
+    with open('Missions.txt', 'w') as outfile:
+        print (request.json)
+        json.dump(request.json, outfile)
+    return jsonify(request.json)
+
+'''
+new Mission json
+{
+"newMissionFlag" : true,
+"missionID" : 0,
+"EstimatedMissionDuration":100,
+"flightConfigurations":{"height" : 10, "locations":[]}
+}
+'''
+#reference : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
+@app.route('/readNewMission', methods=['Get'])
+def readNewMission():
+
+    with open('Missions.txt') as json_file:
+        newMission = json.load(json_file)
+
+    return jsonify(newMission)
+
+
 
 
 @app.route('/RaspberryPiClientTest', methods=['POST'])
@@ -77,7 +115,7 @@ def RPiClientTest():
     url = "http://" + str(address) + ":8083" #url of the RPiClient
 
     #startMission Request
-    data = {'missionID' : '1', 'EstimatedMissionDuration' : '100'}
+    data = {'missionID' : '1', 'EstimatedMissionDuration' : '20'}
 
     print("assignNewMission")
     print(data)
@@ -123,12 +161,9 @@ def UpdateStatus():
     #incase of a failure the RaspberryPi will manage it according to the scenario
 
 
-
-
-
     print("received data from RPiClient IP : " + str(request.remote_addr) + " : ")
     print(request.json)
-    url = 'http://localhost:8082'
+    url = 'http://localhost:8082' #Detection system IP
     data = {'listOfReceivedVideos' : []}
     try :
         storageData = requests.get(url + "/ListOfReceivedVideos")
@@ -141,4 +176,4 @@ def UpdateStatus():
 
 
 if __name__ == '__main__':
-	app.run(host='localhost', debug=True, port=8081)
+	app.run(host='0.0.0.0', debug=True, port=8081)
