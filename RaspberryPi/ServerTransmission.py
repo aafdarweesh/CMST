@@ -81,6 +81,7 @@ def updateStatusWithServer():
             #send the new videos (or not received videos) to the detection server to be examined
             for x in generatedListOfVideos.keys():
                 if x not in listOfReceivedVideos:
+                    convertFormatH264IntoMP4(int(x)) #conver the video format into mp4
                     sendVideoToDetection(int(x)) #sends the video to the detection video
                 else :
                     deleteVideo(x) #deletes the video if it is already received in the server
@@ -89,14 +90,13 @@ def updateStatusWithServer():
         sleep(5) #sleep for 5 sec
 
 
-'''
-json file format that will be sent to the detection server
-{
-'missionID' : 'missionID',
-'videoID' : 'videoID',
-'videoContent' : 'videoContent'
-}
-'''
+
+
+#This function changes the format of the video from .h264 to mp4 (so it is better for the server)
+def convertFormatH264IntoMP4(videoNumber):
+    os.system('MP4Box -fps 30 -add video' + str(videoNumber) + '.h264 video' + str(videoNumber) + '.mp4  ')
+    os.system('rm video' + str(videoNumber) + '.h264')
+
 
 #reference : https://stackoverflow.com/questions/45623885/how-to-convert-an-mp4-to-a-text-file-and-back
 #reference 2 : https://docs.python.org/2/library/uu.html
@@ -110,14 +110,21 @@ def videoIntoString(videoNumber):
 
     return f.read()
 
-
+'''
+json file format that will be sent to the detection server
+{
+'missionID' : 'missionID',
+'videoID' : 'videoID',
+'videoContent' : 'videoContent'
+}
+'''
 #reference : https://stackoverflow.com/questions/9733638/post-json-using-python-requests
 #This function is responsible for sending the completed videos periodically to the detection server
 def sendVideoToDetection(videoNumber):
     global logFile
     print("Inside Send video to Detection System function!")
 
-    url = "http://localhost:8082/ReceiveVideo" #url of the detection server
+    url = "http://158.176.132.242:8082/ReceiveVideo" #url of the detection server
     data = {'missionID' : 'missionID', 'videoID' : str(videoNumber), 'videoContent' : str(videoIntoString(videoNumber))}
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     try :

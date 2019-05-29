@@ -54,7 +54,7 @@ def readMission():
 
 def runSystsem(data):
     print(data)
-    videoDuration = 10
+    videoDuration = 5
     numberOfVideos = data['EstimatedMissionDuration'] / videoDuration
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
     ' & python ServerTransmission.py ' + str(numberOfVideos))
