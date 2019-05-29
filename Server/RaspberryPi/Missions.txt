@@ -1,0 +1,1 @@
+{"newMissionFlag": true, "missionID": 0, "serialNumber": 123, "EstimatedMissionDuration": 100, "flightConfigurations": {"height": 10, "locations": []}}
