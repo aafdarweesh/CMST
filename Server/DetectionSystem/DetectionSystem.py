@@ -53,7 +53,7 @@ def ReceiveVideo():
     receivedEncodedVideo.write(request.json['videoContent'])
 
     #Decode the encoded video back to the same format
-    uu.decode("./ReceivedData/videoTemp.txt", "./ReceivedData/" + videoName + ".h264")
+    uu.decode("./ReceivedData/videoTemp.txt", "./ReceivedData/" + videoName + ".mp4")
 
     itemlist = []
     try :
