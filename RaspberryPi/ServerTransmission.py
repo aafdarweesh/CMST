@@ -4,7 +4,7 @@ import json
 import uu #to encode and decode the video into string (or base64)
 import requests #for the HTTP requests
 # Schedule Library imported
-import schedule #pip install schedule
+#import schedule #pip install schedule
 import os
 
 
@@ -60,7 +60,7 @@ def updateStatusWithServer():
 
         generatedListOfVideos = checkFullyGeneratedVideos()
 
-        url = "http://localhost:8081" #url of the RPiServer
+        url = "http://158.176.132.242:80" #url of the RPiServer
         data = {'missionID' : 'missionID', 'serialNumber' : 'serialNumber',
         'listOfGeneratedVideos' : generatedListOfVideos,
         'logFile' : readLogFile.read()}
@@ -124,7 +124,7 @@ def sendVideoToDetection(videoNumber):
     global logFile
     print("Inside Send video to Detection System function!")
 
-    url = "http://158.176.132.242:8082/ReceiveVideo" #url of the detection server
+    url = "http://158.176.132.242:80/ReceiveVideo" #url of the detection server
     data = {'missionID' : 'missionID', 'videoID' : str(videoNumber), 'videoContent' : str(videoIntoString(videoNumber))}
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     try :
