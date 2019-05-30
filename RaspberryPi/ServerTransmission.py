@@ -94,8 +94,8 @@ def updateStatusWithServer():
 
 #This function changes the format of the video from .h264 to mp4 (so it is better for the server)
 def convertFormatH264IntoMP4(videoNumber):
-    os.system('MP4Box -fps 30 -add video' + str(videoNumber) + '.h264 video' + str(videoNumber) + '.mp4  ')
-    os.system('rm video' + str(videoNumber) + '.h264')
+    os.system('MP4Box -fps 30 -add ./videoBuffer/video' + str(videoNumber) + '.h264 ./videoBuffer/video' + str(videoNumber) + '.mp4  ')
+    os.system('rm ./videoBuffer/video' + str(videoNumber) + '.h264')
 
 
 #reference : https://stackoverflow.com/questions/45623885/how-to-convert-an-mp4-to-a-text-file-and-back
