@@ -32,11 +32,11 @@ def getNewMission():
           flag = req.json()['newMissionFlag']
           print(flag)
           data = req.json()
-          pickle_out = open("Missions.txt","wb")
+          pickle_out = open("Mission.txt","wb")
           pickle.dump(req.json(), pickle_out)
           pickle_out.close()
           '''
-          with open('Missions.txt', 'w') as outfile:
+          with open('Mission.txt', 'w') as outfile:
               print (req.json())
               pickle.dump(req.json(), outfile)
           '''
@@ -47,7 +47,7 @@ def getNewMission():
     runSystsem(data)
 
 def readMission():
-    pickle_in = open("Missions.txt","rb")
+    pickle_in = open("Mission.txt","rb")
     missionData = pickle.load(pickle_in)
     print(missionData)
 
@@ -59,6 +59,12 @@ def runSystsem(data):
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
     ' & python ServerTransmission.py ' + str(numberOfVideos))
 
+
+def deleteAfterMission():
+	os.system('rm videoMetaData.txt')
+	os.system('rm logFile.txt')
+	os.system('rm Mission.txt')
 if __name__ == '__main__':
     getNewMission()
     readMission()
+    deleteAfterMission()
