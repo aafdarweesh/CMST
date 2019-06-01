@@ -155,10 +155,13 @@ def deleteVideo(videoNumber):
                     os.system('rm ./videoBuffer/video' + str(videoNumber) + '.mp4')
 
                     if os.path.exists('./videoBuffer/video' + str(videoNumber) + '.mp4') == True:
+			print("Couldn't delete videoNumber : " + str(videoNumber) + " although it does exist\n")
                             #logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " although it does exist\n")
                     else :
+			print("videoNumber : " + str(videoNumber) + " is DELETED!!!")
                         #logFile.write("videoNumber : " + str(videoNumber) + " is DELETED!!!")
         except :
+		print("Couldn't delete videoNumber : " + str(videoNumber) + " due to exception\n")
                 #logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " due to exception\n")
         #logFile.close()
 
