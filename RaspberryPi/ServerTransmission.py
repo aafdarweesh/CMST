@@ -12,7 +12,7 @@ import os
 numberOfVideos = int(sys.argv[1])
 
 LogFile = open('logFile.txt', 'w')
-LogFile.write('LOG FILE')
+LogFile.write('LOG FILE\n')
 LogFile.close()
 
 #This function returns a list of fully (completed) generated videos
@@ -112,7 +112,7 @@ def videoIntoString(videoNumber):
     f = open('./videoBuffer/videoTemp.txt','r')
     #Log the step into the logFile
     logFile = open("logFile.txt","a+") #This file contains the system logs
-    logFile.write("Converted the videoNumber : " + str(videoNumber) + " into txtfile.")
+    logFile.write("Converted the videoNumber : " + str(videoNumber) + " into txtfile.\n")
     logFile.clost()
     return f.read()
 
@@ -127,21 +127,26 @@ json file format that will be sent to the detection server
 #reference : https://stackoverflow.com/questions/9733638/post-json-using-python-requests
 #This function is responsible for sending the completed videos periodically to the detection server
 def sendVideoToDetection(videoNumber):
-    print("Inside Send video to Detection System function!")
+	print("Inside Send video to Detection System function!")
 
-    url = "http://158.176.132.242:8000/ReceiveVideo" #url of the detection server
-    data = {'missionID' : 'missionID', 'videoID' : str(videoNumber), 'videoContent' : str(videoIntoString(videoNumber))}
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    try :
-        req = requests.post(url, data=json.dumps(data), headers=headers)
+	url = "http://158.176.132.242:8000/ReceiveVideo" #url of the detection server
+	data = {'missionID' : 'missionID', 'videoID' : str(videoNumber), 'videoContent' : str(videoIntoString(videoNumber))}
+	headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
-        print("The result of sending videoNumber : " + str(videoNumber) + " to the detection server : " + str(req.status_code))
-    except :
-        print("Couldn't connect to the detection server!!!")
-    #according to some sources : req.status_codes
-    logFile = open("logFile.txt","a+") #This file contains the system logs
-    logFile.write("The result of sending videoNumber : " + str(videoNumber) + " to the detection server : " + str(req.status))
-    logFile.close()
+	#according to some sources : req.status_codes
+	logFile = open("logFile.txt","a+") #This file contains the system logs
+	try :
+		req = requests.post(url, data=json.dumps(data), headers=headers)
+
+		logFile.write("The result of sending videoNumber : " + str(videoNumber) + " to the detection server : " + str(req.status_code) + '\n')		
+
+		print("The result of sending videoNumber : " + str(videoNumber) + " to the detection server : " + str(req.status_code))
+	except :
+		print("Couldn't connect to the detection server!!!")
+
+		logFile.write("Couldn't connect to the detection server!!!\")
+	logFile.close()
+    
 
 #This function will delete the already sent videos from the videoBuffer folder
 def deleteVideo(videoNumber):
@@ -151,11 +156,11 @@ def deleteVideo(videoNumber):
                     os.system('rm ./videoBuffer/video' + str(videoNumber) + '.mp4')
 
                     if os.path.exists('./videoBuffer/video' + str(videoNumber) + '.mp4') == True:
-                            logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " although it does exist")
+                            logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " although it does exist\n")
                     else :
                         logFile.write("videoNumber : " + str(videoNumber) + " is DELETED!!!")
         except :
-                logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " due to exception")
+                logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " due to exception\n")
         logFile.close()
 
         
