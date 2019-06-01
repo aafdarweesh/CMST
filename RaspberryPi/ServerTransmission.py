@@ -68,7 +68,7 @@ def updateStatusWithServer():
         'listOfGeneratedVideos' : generatedListOfVideos}
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         
-        readLogFile.close()
+        #readLogFile.close()
         try :
             req = requests.post(url + "/UpdateStatus", data=json.dumps(data), headers=headers)
 
