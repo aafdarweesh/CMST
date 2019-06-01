@@ -44,6 +44,7 @@ def getNewMission():
         except Exception as e:
             print (str(e))
             print("Couldn't connect to RPiServer to get the new Mission !!!")
+    confirmReceivingMission(data)
     runSystsem(data)
 
 def readMission():
@@ -51,6 +52,15 @@ def readMission():
     missionData = pickle.load(pickle_in)
     print(missionData)
 
+    
+def confirmReceivingMission(data):
+    url = "http://158.176.132.242:8000" #url of the RPiServer
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    try:
+        req = requests.post(url + "/confirmReceivingMission", data=json.dumps(data), headers=headers)
+        print('Receiving mission is confirmed')
+    except:
+        print('Error Connecting to the server to confirm receiving the mission')
 
 def runSystsem(data):
     print(data)
