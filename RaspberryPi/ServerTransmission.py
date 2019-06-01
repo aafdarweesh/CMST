@@ -54,6 +54,7 @@ json file format that will be sent to the server to update the status
 #reference 2 : https://stackoverflow.com/questions/37825844/how-to-compare-two-dictionaries-to-check-if-a-key-is-present-in-both-of-them?rq=1
 #reference 3 : https://pythonspot.com/json-encoding-and-decoding-with-python/
 def updateStatusWithServer():
+    sleep(5) #wait for the first video to start being recorded
     print("Inside updateStatusWithServer!!!")
     listOfReceivedVideos = []
     while (len(listOfReceivedVideos) != numberOfVideos):
