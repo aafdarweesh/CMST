@@ -7,13 +7,13 @@ import os
 
 
 '''
-new Mission json
+new Mission json (height in m, speed in m/s, videoDuration is 10s)
 {
 "newMissionFlag" : true,
 "missionID" : 0,
 "serialNumber" : 123,
-"EstimatedMissionDuration":100,
-"flightConfigurations":{"height" : 10, "locations":[]}
+"NumberOfVideos":90,
+"flightConfigurations":{"height" : 10, "speed" : 1, "locations":[]}
 }
 '''
 #This function is responsible for retrieving the mission from the server once it is assigned
@@ -54,8 +54,8 @@ def readMission():
 
 def runSystsem(data):
     print(data)
-    videoDuration = 10
-    numberOfVideos = data['EstimatedMissionDuration'] / videoDuration
+    videoDuration = 10 #video duration in sec
+    numberOfVideos = data['NumberOfVideos']
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
     ' & python ServerTransmission.py ' + str(numberOfVideos))
 
