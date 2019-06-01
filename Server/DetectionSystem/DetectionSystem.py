@@ -22,6 +22,19 @@ app = Flask(__name__)
 #CORS(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
+'''
+#For testing the cors problem 
+#app = Flask(__name__)
+#api = Api(app)
+
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  return response
+
+'''
 
 '''
 json file format that will be sent to the detection server
