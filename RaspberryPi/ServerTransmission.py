@@ -11,9 +11,9 @@ import os
 
 numberOfVideos = int(sys.argv[1])
 
-LogFile = open('logFile.txt', 'w')
-LogFile.write('LOG FILE\n')
-LogFile.close()
+#LogFile = open('logFile.txt', 'w')
+#LogFile.write('LOG FILE\n')
+#LogFile.close()
 
 #This function returns a list of fully (completed) generated videos
 def checkFullyGeneratedVideos():
@@ -44,7 +44,7 @@ json file format that will be sent to the server to update the status
 'missionID' : 'missionID',
 'serialNumber' : 'serialNumber',
 'listOfGeneratedVideos' : {'1' : 'completed', '2' : 'completed', ...},
-'logFile' : 'logFile'
+
 }
 '''
 #This function updates the status of the system with the server and receives a list of received videos by the server
@@ -59,14 +59,13 @@ def updateStatusWithServer():
     listOfReceivedVideos = []
     while (len(listOfReceivedVideos) != numberOfVideos):
         print("While loop!")
-        readLogFile = open('logFile.txt', 'r')
+        #readLogFile = open('logFile.txt', 'r')
 
         generatedListOfVideos = checkFullyGeneratedVideos()
 
         url = "http://158.176.132.242:5000" #url of the RPiServer
         data = {'missionID' : 'missionID', 'serialNumber' : 'serialNumber',
-        'listOfGeneratedVideos' : generatedListOfVideos,
-        'logFile' : readLogFile.read()}
+        'listOfGeneratedVideos' : generatedListOfVideos}
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         
         readLogFile.close()
@@ -111,9 +110,9 @@ def videoIntoString(videoNumber):
     uu.encode('./videoBuffer/video' + str(videoNumber) + '.mp4', './videoBuffer/videoTemp.txt')
     f = open('./videoBuffer/videoTemp.txt','r')
     #Log the step into the logFile
-    logFile = open("logFile.txt","a+") #This file contains the system logs
-    logFile.write("Converted the videoNumber : " + str(videoNumber) + " into txtfile.\n")
-    logFile.clost()
+    #logFile = open("logFile.txt","a+") #This file contains the system logs
+    #logFile.write("Converted the videoNumber : " + str(videoNumber) + " into txtfile.\n")
+    #logFile.clost()
     return f.read()
 
 '''
@@ -134,41 +133,41 @@ def sendVideoToDetection(videoNumber):
 	headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
 	#according to some sources : req.status_codes
-	logFile = open("logFile.txt","a+") #This file contains the system logs
+	#logFile = open("logFile.txt","a+") #This file contains the system logs
 	try :
 		req = requests.post(url, data=json.dumps(data), headers=headers)
 
-		logFile.write("The result of sending videoNumber : " + str(videoNumber) + " to the detection server : " + str(req.status_code) + '\n')		
+		#logFile.write("The result of sending videoNumber : " + str(videoNumber) + " to the detection server : " + str(req.status_code) + '\n')		
 
 		print("The result of sending videoNumber : " + str(videoNumber) + " to the detection server : " + str(req.status_code))
 	except :
 		print("Couldn't connect to the detection server!!!")
 
-		logFile.write("Couldn't connect to the detection server!!!\n")
-	logFile.close()
+		#logFile.write("Couldn't connect to the detection server!!!\n")
+	#logFile.close()
     
 
 #This function will delete the already sent videos from the videoBuffer folder
 def deleteVideo(videoNumber):
-        logFile = open("logFile.txt","a+") #This file contains the system logs
+        #logFile = open("logFile.txt","a+") #This file contains the system logs
         try :
                 if os.path.exists('./videoBuffer/video' + str(videoNumber) + '.mp4') == True:
                     os.system('rm ./videoBuffer/video' + str(videoNumber) + '.mp4')
 
                     if os.path.exists('./videoBuffer/video' + str(videoNumber) + '.mp4') == True:
-                            logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " although it does exist\n")
+                            #logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " although it does exist\n")
                     else :
-                        logFile.write("videoNumber : " + str(videoNumber) + " is DELETED!!!")
+                        #logFile.write("videoNumber : " + str(videoNumber) + " is DELETED!!!")
         except :
-                logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " due to exception\n")
-        logFile.close()
+                #logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " due to exception\n")
+        #logFile.close()
 
         
 
 def deleteAfterMission():
 	try:
 		os.system('rm videoMetaData.txt')
-		os.system('rm logFile.txt')
+		#os.system('rm logFile.txt')
 		os.system('rm Mission.txt')
 	except:
 		print('ERROR deleting files after mission')
