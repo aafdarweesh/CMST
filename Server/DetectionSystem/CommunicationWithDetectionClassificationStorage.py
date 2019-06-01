@@ -134,7 +134,7 @@ def selectFrames(detection_directory, classification_directory, video_number):
 def runProgramOnReceivedVideos():
 	listOfReceivedVideos = []
     try :
-        with open ('ReceivedDataMetaData.txt', 'rb') as fp:
+        with open (MAIN_DIRECTORY + '\\' + missionID + '\\' + 'ReceivedDataMetaData.txt', 'rb') as fp:
             listOfReceivedVideos = pickle.load(fp)
     except:
             print("Nothing in the file")
