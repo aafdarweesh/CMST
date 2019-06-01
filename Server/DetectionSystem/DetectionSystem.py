@@ -144,13 +144,13 @@ def UpdateStatus():
 
 
 '''
-new Mission json
+new Mission json (height in m, speed in m/s, videoDuration is 10s)
 {
 "newMissionFlag" : true,
 "missionID" : 0,
 "serialNumber" : 123,
-"EstimatedMissionDuration":100,
-"flightConfigurations":{"height" : 10, "locations":[]}
+"NumberOfVideos":90,
+"flightConfigurations":{"height" : 10, "speed" : 1, "locations":[]}
 }
 '''
 #reference : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
@@ -193,12 +193,13 @@ def assignMission():
     return jsonify(request.json)
 
 '''
-new Mission json
+new Mission json (height in m, speed in m/s, videoDuration is 10s)
 {
 "newMissionFlag" : true,
 "missionID" : 0,
-"EstimatedMissionDuration":100,
-"flightConfigurations":{"height" : 10, "locations":[]}
+"serialNumber" : 123,
+"NumberOfVideos":90,
+"flightConfigurations":{"height" : 10, "speed" : 1, "locations":[]}
 }
 '''
 #reference 1 : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
