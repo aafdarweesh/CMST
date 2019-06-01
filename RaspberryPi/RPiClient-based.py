@@ -54,16 +54,19 @@ def readMission():
 
 def runSystsem(data):
     print(data)
-    videoDuration = 5
+    videoDuration = 10
     numberOfVideos = data['EstimatedMissionDuration'] / videoDuration
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
     ' & python ServerTransmission.py ' + str(numberOfVideos))
 
 
 def deleteAfterMission():
-	os.system('rm videoMetaData.txt')
-	os.system('rm logFile.txt')
-	os.system('rm Mission.txt')
+	try:
+		os.system('rm videoMetaData.txt')
+		os.system('rm logFile.txt')
+		os.system('rm Mission.txt')
+	except:
+		print('ERROR deleting files after mission')
 if __name__ == '__main__':
     getNewMission()
     readMission()
