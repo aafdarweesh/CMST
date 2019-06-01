@@ -18,7 +18,7 @@ new Mission json (height in m, speed in m/s, videoDuration is 10s)
 '''
 #This function is responsible for retrieving the mission from the server once it is assigned
 def getNewMission():
-    url = "http://158.176.132.242:8000" #url of the RPiServer
+    url = "http://158.176.132.242:5000" #url of the RPiServer
     #getMission Request
     data = {}
     flag = False
@@ -54,7 +54,7 @@ def readMission():
 
     
 def confirmReceivingMission(data):
-    url = "http://158.176.132.242:8000" #url of the RPiServer
+    url = "http://158.176.132.242:5000" #url of the RPiServer
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     try:
         req = requests.post(url + "/confirmReceivingMission", data=json.dumps(data), headers=headers)
