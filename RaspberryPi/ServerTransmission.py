@@ -63,7 +63,7 @@ def updateStatusWithServer():
 
         generatedListOfVideos = checkFullyGeneratedVideos()
 
-        url = "http://158.176.132.242:8000" #url of the RPiServer
+        url = "http://158.176.132.242:5000" #url of the RPiServer
         data = {'missionID' : 'missionID', 'serialNumber' : 'serialNumber',
         'listOfGeneratedVideos' : generatedListOfVideos,
         'logFile' : readLogFile.read()}
@@ -129,7 +129,7 @@ json file format that will be sent to the detection server
 def sendVideoToDetection(videoNumber):
 	print("Inside Send video to Detection System function!")
 
-	url = "http://158.176.132.242:8000/ReceiveVideo" #url of the detection server
+	url = "http://158.176.132.242:5000/ReceiveVideo" #url of the detection server
 	data = {'missionID' : 'missionID', 'videoID' : str(videoNumber), 'videoContent' : str(videoIntoString(videoNumber))}
 	headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
