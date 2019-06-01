@@ -18,7 +18,7 @@ new Mission json
 '''
 #This function is responsible for retrieving the mission from the server once it is assigned
 def getNewMission():
-    url = "http://158.176.132.242:80" #url of the RPiServer
+    url = "http://158.176.132.242:8000" #url of the RPiServer
     #getMission Request
     data = {}
     flag = False
