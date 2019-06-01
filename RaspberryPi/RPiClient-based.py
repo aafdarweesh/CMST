@@ -60,14 +60,7 @@ def runSystsem(data):
     ' & python ServerTransmission.py ' + str(numberOfVideos))
 
 
-def deleteAfterMission():
-	try:
-		os.system('rm videoMetaData.txt')
-		os.system('rm logFile.txt')
-		os.system('rm Mission.txt')
-	except:
-		print('ERROR deleting files after mission')
 if __name__ == '__main__':
     getNewMission()
     readMission()
-    deleteAfterMission()
+  
