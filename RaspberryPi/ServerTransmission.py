@@ -11,6 +11,9 @@ import os
 
 numberOfVideos = int(sys.argv[1])
 
+LogFile = open('logFile.txt', 'w')
+LogFile.write('LOG FILE')
+LogFile.close()
 
 #This function returns a list of fully (completed) generated videos
 def checkFullyGeneratedVideos():
