@@ -24,6 +24,7 @@ MAIN_DIRECTORY = 'C:\\CMSTData'
 missionID = str(sys.argv[1])
 drone_height = int(sys.argv[2])
 drone_speed = int(sys.argv[3])
+expected_number_of_videos = int(sys.argv[4])
 
 #Common variables (Detection)
 location_of_detection_program = 'C:\\tensorflow1\\models\\research\\object_detection'
@@ -62,6 +63,7 @@ def runClassificationSystem(video_number, file_name):
 		return False
 
 #This function reads the results of the classification program on the spcified image
+#reference : https://stackoverflow.com/questions/9383740/what-does-pythons-eval-do
 def readClassificationResults():
 	#write the address to the file 
 	F = open(location_of_classification_program + "\\Result.txt","r") 
@@ -98,7 +100,11 @@ frames_in_region = int(((1.2 *drone_height)/drone_speed)*30) #1.2m is the length
 	
 #This function will choose frames from the detection directory accroding to the region 
 #(specified by the height, and the speed, lense of the camera "fixed in our case")
-def selectFrames(detection_directory, classification_directory, video_number):
+def selectFrames(video_number):
+
+	#the detection Folder location 
+	detection_directory = MAIN_DIRECTORY + '\\' + missionID + '\\' + 'DetectionFolder'
+
 	list_of_detected_frames = listOfNamesWithoutExtension(listOfFilesInDirectory(detection_directory + '\\Detected'))
 	take_frame_flag = True
 	region_number = 1
@@ -133,11 +139,21 @@ def selectFrames(detection_directory, classification_directory, video_number):
 
 def runProgramOnReceivedVideos():
 	listOfReceivedVideos = []
-    try :
-        with open (MAIN_DIRECTORY + '\\' + missionID + '\\' + 'ReceivedDataMetaData.txt', 'rb') as fp:
-            listOfReceivedVideos = pickle.load(fp)
-    except:
-            print("Nothing in the file")
+	listOfDetectedVideos = []
+	#Stop the prorgam after processing all videos expected to be received
+	while listOfDetectedVideos.length() < expected_number_of_videos:
+		try :
+			with open (MAIN_DIRECTORY + '\\' + missionID + '\\' + 'ReceivedDataMetaData.txt', 'rb') as fp:
+				listOfReceivedVideos = pickle.load(fp)
+		except:
+				print("Nothing in the file")
 
-	for x in listOfReceivedVideos:
-		runDetectionSystem()
+		for x in listOfReceivedVideos:
+			if x not in listOfDetectedVideos:
+				listOfDetectedVideos.append(x)
+				runDetectionSystem(x)
+				selectFrames(x)
+	#When a mission is done, update its state in the database
+			
+#run the system
+runProgramOnReceivedVideos()

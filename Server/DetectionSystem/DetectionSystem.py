@@ -31,14 +31,18 @@ json file format that will be sent to the detection server
 {
 'missionID' : 'missionID',
 'videoID' : 'videoID',
-'videoContent' : 'videoContent'
+'videoContent' : 'videoContent',
+'startingTime' : 'startingTime',
+'location' : {'lat': 35.24797179165725, 'lng': 33.022986722853716}
 }
 
 
 {
 "missionID" : "missionID",
 "videoID" : "videoID",
-"videoContent" : "videoContent"
+"videoContent" : "videoContent",
+'startingTime' : 'startingTime',
+'location' : {'lat': 35.24797179165725, 'lng': 33.022986722853716}
 }
 '''
 
@@ -47,16 +51,17 @@ json file format that will be sent to the detection server
 #This function will be moved to the detection system
 @app.route('/ReceiveVideo', methods = ['POST'])
 def ReceiveVideo():
+	global MAIN_DIRECTORY
     videoName = ''
-    videoName += str(request.json['missionID'])
+    #videoName += str(request.json['missionID'])
     videoName += str(request.json['videoID'])
 
     print("Before the video content conversion")
-    receivedEncodedVideo = open("./ReceivedData/videoTemp.txt", 'w')
+    receivedEncodedVideo = open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", 'w')
     receivedEncodedVideo.write(request.json['videoContent'])
 
     #Decode the encoded video back to the same format
-    uu.decode("./ReceivedData/videoTemp.txt", "./ReceivedData/" + videoName + ".mp4")
+    uu.decode(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\" + videoName + ".mp4")
 
     itemlist = []
     try :
@@ -107,7 +112,7 @@ def UpdateStatus():
     url = 'http://localhost:8082' #Detection system IP
     data = {'listOfReceivedVideos' : []}
     try :
-        with open ('ReceivedDataMetaData.txt', 'rb') as fp:
+        with open (MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'rb') as fp:
             itemlist = pickle.load(fp)
             data['listOfReceivedVideos'] = itemlist
     except:
@@ -188,17 +193,33 @@ new Mission json
 "flightConfigurations":{"height" : 10, "locations":[]}
 }
 '''
-#reference : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
+#reference 1 : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
+#reference 2 : https://stackoverflow.com/questions/1274405/how-to-create-new-folder
 @app.route('/readNewMission', methods=['Get'])
 def readNewMission():
+	global MAIN_DIRECTORY
+	with open('Missions.txt') as json_file:
+		newMission = json.load(json_file)
 
-    with open('Missions.txt') as json_file:
-        newMission = json.load(json_file)
+		#create new Directory for the mission
+		newpath = MAIN_DIRECTORY + '\\' + str(newMission['missionID'])
+		if not os.path.exists(newpath):
+				os.makedirs(newpath) #create the new mission directory (will store all data related to the mission there (images, videos, some meta files)
+				os.makedirs(newpath + '\\ReceivedData') #This directory will be used to store the received videos
 
-    return jsonify(newMission)
+				with open(newpath + '\\ReceivedDataMetaData.txt', 'w'):
+						pass
 
+		return jsonify(newMission)
+	
 
-
+'''
+@app.route('/confirmReceivingMission', methods=['Get'])
+#The pi confirms that it received the mission with the starting timestamp
+def confirmReceivingMission():
+	#confirm the missionID is valid
+	
+'''
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', debug=True, port=80)

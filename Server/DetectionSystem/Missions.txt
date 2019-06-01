@@ -1,1 +1,1 @@
-{"newMissionFlag": true, "missinID": 0, "serialNumber": "3", "EstimatedMissionDuration": 98, "flightConfigurations": {"height": "3", "location": [{"lat": 35.235831181856256, "lng": 33.06165044198201}, {"lat": 35.234398395100136, "lng": 33.06437556634114}]}}
+{"newMissionFlag": true, "missionID": 0, "serialNumber": 123, "EstimatedMissionDuration": 30, "flightConfigurations": {"height": 10, "locations": []}}
