@@ -65,14 +65,14 @@ def ReceiveVideo():
 
     itemlist = []
     try :
-        with open ('ReceivedDataMetaData.txt', 'rb') as fp:
+        with open (MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'rb') as fp:
             itemlist = pickle.load(fp)
             data['listOfReceivedVideos'] = itemlist
     except:
             print("Nothing in the file")
 			
     itemlist.append(request.json['videoID'])
-    with open('ReceivedDataMetaData.txt', 'wb') as fp:
+    with open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'wb') as fp:
         pickle.dump(itemlist, fp)
 
     return jsonify("Received!")
@@ -97,7 +97,15 @@ def UpdateIP():
     return jsonify({'SerialNumber' : rPi.getSerialNumber(), 'IP' : rPi.getIP()})
 
 
-
+'''
+json file format that will be sent to the server to update the status
+{
+'missionID' : 'missionID',
+'serialNumber' : 'serialNumber',
+'listOfGeneratedVideos' : {'1' : 'completed', '2' : 'completed', ...},
+'logFile' : 'logFile'
+}
+'''
 #Status method is responsible for checking the Synchronization between the RaspberryPi data and the storage "which detection system evoke"
 @app.route('/UpdateStatus', methods=['POST'])
 def UpdateStatus():
@@ -222,4 +230,4 @@ def confirmReceivingMission():
 '''
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', debug=True, port=80)
+	app.run(host='0.0.0.0', debug=True, port=8000)
