@@ -144,7 +144,7 @@ def sendVideoToDetection(videoNumber):
 	except :
 		print("Couldn't connect to the detection server!!!")
 
-		logFile.write("Couldn't connect to the detection server!!!\")
+		logFile.write("Couldn't connect to the detection server!!!\n")
 	logFile.close()
     
 
