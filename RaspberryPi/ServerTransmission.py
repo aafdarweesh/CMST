@@ -154,5 +154,16 @@ def deleteVideo(videoNumber):
                 logFile.write("Couldn't delete videoNumber : " + str(videoNumber) + " due to exception")
         logFile.close()
 
+        
+
+def deleteAfterMission():
+	try:
+		os.system('rm videoMetaData.txt')
+		os.system('rm logFile.txt')
+		os.system('rm Mission.txt')
+	except:
+		print('ERROR deleting files after mission')
+        
 #Run the transmission program
 updateStatusWithServer()
+deleteAfterMission()
