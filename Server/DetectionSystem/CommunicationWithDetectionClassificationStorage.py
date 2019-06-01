@@ -28,17 +28,17 @@ drone_speed = int(sys.argv[3])
 #Common variables (Detection)
 location_of_detection_program = 'C:\\tensorflow1\\models\\research\\object_detection'
 name_of_detection_program = 'Object_detection_video.py'
-location_of_the_video = MAIN_DIRECTORY + '\\ReceivedData\\' #in our case the video's location
+location_of_the_video = MAIN_DIRECTORY + '\\' + missionID + '\\ReceivedData\\' #in our case the video's location
 
 
 #this function runs the detection system on the given video (in the directories specified above)
-def runDetectionSystem(file_name):
+def runDetectionSystem(video_number):
 
 	try:
-		os.system('activate tensorflow1 & cd ' + location_of_detection_program + ' & python ' + name_of_detection_program + ' ' + location_of_the_video + file_name)
+		os.system('activate tensorflow1 & cd ' + location_of_detection_program + ' & python ' + name_of_detection_program + ' ' + location_of_the_video + str(video_number) + '.mp4')
 		return True
 	except:
-		print('Problem Running Video ' + str(file_name) + 'on the detection system')
+		print('Problem Running Video ' + str(video_number) + '.mp4' + 'on the detection system')
 		return False
 		
 	
@@ -98,7 +98,7 @@ frames_in_region = int(((1.2 *drone_height)/drone_speed)*30) #1.2m is the length
 	
 #This function will choose frames from the detection directory accroding to the region 
 #(specified by the height, and the speed, lense of the camera "fixed in our case")
-def selectFrames(detection_directory, classification_directory, videoURL):
+def selectFrames(detection_directory, classification_directory, video_number):
 	list_of_detected_frames = listOfNamesWithoutExtension(listOfFilesInDirectory(detection_directory + '\\Detected'))
 	take_frame_flag = True
 	region_number = 1
@@ -107,7 +107,7 @@ def selectFrames(detection_directory, classification_directory, videoURL):
 			#region results will be stored in the storage system
 			region_result = {}
 			region_result['frameURL'] =  detection_directory + '\\Detected' + '\\' + str(x) + '.jpg'
-			region_result['videoURL'] = videoURL
+			region_result['videoURL'] = location_of_the_video + str(video_number) + '.mp4'
 			region_result['timeOfAppearance'] = x/30.0
 			
 			take_frame_flag = False
