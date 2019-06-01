@@ -136,6 +136,20 @@ def selectFrames(video_number):
 			
 			#send the data of the region_result to the storage system
 
+#Create Video folder for the videoID (inside the DetectionFolder with (Detected, Cropped) subFolders
+def createVideoDirectory(video_number):
+	#create new Directory for the mission
+	newpath = MAIN_DIRECTORY + '\\' + str(newMission['missionID']) + '\\DetectionFolder\\' + str(video_number) 
+	if not os.path.exists(newpath):
+		os.makedirs(newpath)
+		
+	if not os.path.exists(newpath + '\\Detected'):
+		os.makedirs(newpath + '\\Detected')
+	
+	if not os.path.exists(newpath + '\\Cropped'):
+		os.makedirs(newpath + '\\Cropped')
+	
+
 
 def runProgramOnReceivedVideos():
 	listOfReceivedVideos = []
@@ -149,10 +163,13 @@ def runProgramOnReceivedVideos():
 				print("Nothing in the file")
 
 		for x in listOfReceivedVideos:
+		
 			if x not in listOfDetectedVideos:
-				listOfDetectedVideos.append(x)
-				runDetectionSystem(x)
-				selectFrames(x)
+				createVideoDirectory(x) #create video directory in the data
+				
+				listOfDetectedVideos.append(x) #add the video number to the detected videos
+				runDetectionSystem(x) #run the detection system on that video
+				selectFrames(x) #select frames (eliminate redundant detections in the same region), then run the classification system
 	#When a mission is done, update its state in the database
 			
 #run the system
