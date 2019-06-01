@@ -24,7 +24,7 @@ MAIN_DIRECTORY = 'C:\\CMSTData'
 missionID = str(sys.argv[1])
 drone_height = int(sys.argv[2])
 drone_speed = int(sys.argv[3])
-expected_number_of_videos = int(sys.argv[4])
+number_of_videos = int(sys.argv[4])
 
 #Common variables (Detection)
 location_of_detection_program = 'C:\\tensorflow1\\models\\research\\object_detection'
@@ -155,7 +155,7 @@ def runProgramOnReceivedVideos():
 	listOfReceivedVideos = []
 	listOfDetectedVideos = []
 	#Stop the prorgam after processing all videos expected to be received
-	while listOfDetectedVideos.length() < expected_number_of_videos:
+	while listOfDetectedVideos.length() < number_of_videos:
 		try :
 			with open (MAIN_DIRECTORY + '\\' + missionID + '\\' + 'ReceivedDataMetaData.txt', 'rb') as fp:
 				listOfReceivedVideos = pickle.load(fp)
