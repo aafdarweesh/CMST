@@ -1,9 +1,7 @@
-#C:\tensorflow1\models\research\object_detection
-#"./ReceivedData/videoTemp.txt", "./ReceivedData/" + videoName + ".mp4"
-'''
+
 import pickle
 import os
-
+'''
 
 def copyReceivedVideosToDetection():
 	itemlist = []
@@ -31,7 +29,7 @@ copyReceivedVideosToDetection()
 import os
 
 
-
+'''
 #detection
 location_of_detection_program = 'C:\\tensorflow1\\models\\research\\object_detection'
 name_of_detection_program = 'Object_detection_video.py'
@@ -53,3 +51,18 @@ F.close()
 
 
 os.system('activate MATLAB & cd ' + location_of_classification_program + ' & python ' + name_of_classification_program)
+
+
+
+'''
+
+
+list_of_files = os.listdir('C:\\New Project\\Detected\\Cropped')
+print(list_of_files)
+
+list_of_files_names = [] #list of files names without the extension
+for x in list_of_files:
+    list_of_files_names.append(x.split('.')[0])
+print(list_of_files_names)
+
+#list_of_files = [str(x) for x in list_of_files x.split('.')[0] == is.digit()]
