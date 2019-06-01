@@ -1,6 +1,7 @@
 
 import pickle
 import os
+import sys
 
 
 
@@ -15,12 +16,19 @@ import os
 # --> \--> \--> \--> \Cropped
 
 
+#Main Directory
+MAIN_DIRECTORY = 'C:\\CMSTData'
 
+
+#Data given on the run (MissionID, drone speed, drone height)
+missionID = str(sys.argv[1])
+drone_height = int(sys.argv[2])
+drone_speed = int(sys.argv[3])
 
 #Common variables (Detection)
 location_of_detection_program = 'C:\\tensorflow1\\models\\research\\object_detection'
 name_of_detection_program = 'Object_detection_video.py'
-location_of_the_video = 'C:\\Users\\Administrator\\Desktop\\CMSTControllingSystem\\CMST\\Server\\DetectionSystem\\ReceivedData\\' #in our case the video's location
+location_of_the_video = MAIN_DIRECTORY + '\\ReceivedData\\' #in our case the video's location
 
 
 #this function runs the detection system on the given video (in the directories specified above)
@@ -37,13 +45,13 @@ def runDetectionSystem(file_name):
 #Common variables (Classification)
 location_of_classification_program = 'C:\\Users\\Administrator\\Desktop\\TurtleClassification'
 name_of_classification_program = 'TestCNN.py'
-location_of_the_image = 'C:\\New Project\\Detected\\Cropped\\'
+location_of_the_image = MAIN_DIRECTORY + '\\' + missionID +'\\DetectionFolder' #then add 'video#\\Cropped\\'
 	
 #This function runs the classification system on the given image (in the directories specified above)
-def runClassificationSystem(file_name):
+def runClassificationSystem(video_number, file_name):
 	#write the address to the file 
 	F = open(location_of_classification_program + "\\TestImageAddress.txt","w") 
-	F.write(location_of_the_image + file_name)
+	F.write(location_of_the_image + '\\' + str(video_number) + '\\Cropped\\' + file_name)
 	F.close()
 
 	try:
@@ -85,9 +93,8 @@ def listOfNamesWithoutExtension(list_of_data):
 	
 	
 #Calculate the number of frames in the same region
-drone_height = int(sys.argv[1])
-drone_speed = int(sys.argv[2])
-frames_in_region = ((1.2 *drone_height)//drone_speed)*30 #1.2m is the length of the area covered, (for 1m height) 30 is the number of frames per second, drone_speed in m/s
+
+frames_in_region = int(((1.2 *drone_height)/drone_speed)*30) #1.2m is the length of the area covered, (for 1m height) 30 is the number of frames per second, drone_speed in m/s
 	
 #This function will choose frames from the detection directory accroding to the region 
 #(specified by the height, and the speed, lense of the camera "fixed in our case")
@@ -123,3 +130,14 @@ def selectFrames(detection_directory, classification_directory, videoURL):
 			
 			#send the data of the region_result to the storage system
 
+
+def runProgramOnReceivedVideos():
+	listOfReceivedVideos = []
+    try :
+        with open ('ReceivedDataMetaData.txt', 'rb') as fp:
+            listOfReceivedVideos = pickle.load(fp)
+    except:
+            print("Nothing in the file")
+
+	for x in listOfReceivedVideos:
+		runDetectionSystem()
