@@ -13,6 +13,8 @@ import uu
 
 import pickle
 
+import subprocess
+
 
 #Common Class that are going to be used
 import User, DroneConfigurations, Mission, RaspberryPi
@@ -74,7 +76,7 @@ def ReceiveVideo():
     itemlist.append(request.json['videoID'])
     with open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'wb') as fp:
         pickle.dump(itemlist, fp)
-
+	
     return jsonify("Received!")
 
 
@@ -223,12 +225,33 @@ def readNewMission():
 	
 
 '''
-@app.route('/confirmReceivingMission', methods=['Get'])
-#The pi confirms that it received the mission with the starting timestamp
-def confirmReceivingMission():
-	#confirm the missionID is valid
-	
+received Mission json (height in m, speed in m/s, videoDuration is 10s)
+{
+"newMissionFlag" : true,
+"missionID" : 0,
+"serialNumber" : 123,
+"NumberOfVideos":90,
+"flightConfigurations":{"height" : 10, "speed" : 1, "locations":[]}
+}
 '''
+@app.route('/confirmReceivingMission', methods=['Post'])
+#The pi confirms that it received the mission with the starting timestamp
+#reference 1 : https://stackoverflow.com/questions/546017/how-do-i-run-another-script-in-python-without-waiting-for-it-to-finish
+#reference 2 : https://docs.python.org/3/library/subprocess.html
+def confirmReceivingMission():
+
+	#if pi received the mission (start the communication with the detection system and classification system)
+	if int(request.json['videoID']) == 0:
+		#communication system parameters (missionID, drone_height, drone_speed, number_of_videos)
+		runningCommand = './CommunicationWithDetectionClassificationStorage.py ' + str(request.json['missionID'])
+		runningCommand += ' ' + str(request.json['flightConfigurations']['height'])
+		runningCommand += ' ' + str(request.json['flightConfigurations']['speed'])
+		runningCommand += ' ' + str(request.json['NumberOfVideos'])
+		#run pipLine fir that program (the communication with the detection and classification systems)
+		p = subprocess.Popen([sys.executable, runningCommand], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	
+	
+
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', debug=True, port=8000)
