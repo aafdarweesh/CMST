@@ -39,6 +39,14 @@ def runClassificationSystem(file_name):
 		print('Problem Running image ' + str(file_name) + 'on the classification system')
 		return False
 
+#This function reads the results of the classification program on the spcified image
+def readClassificationResults():
+	#write the address to the file 
+	F = open(location_of_classification_program + "\\Result.txt","r") 
+	contents = F.read()
+	F.close()
+	result = eval(contents)
+	return result
 
 
 #this function return list of files in directory (will be used to get the files detected and feed it to the classification system)
@@ -59,69 +67,45 @@ def listOfNamesWithoutExtension(list_of_data):
 		list_of_files_names.append(x.split('.')[0])	
 
 	return list_of_files_names
-
-'''
-
-def copyReceivedVideosToDetection():
-	itemlist = []
-    try :
-        with open ('ReceivedDataMetaData.txt', 'rb') as fp:
-            itemlist = pickle.load(fp)
-            data['listOfReceivedVideos'] = itemlist
-    except:
-            print("Nothing in the file")
+	
+	
+	
+#Calculate the number of frames in the same region
+drone_height = int(sys.argv[1])
+drone_speed = int(sys.argv[2])
+frames_in_region = ((1.2 *drone_height)//drone_speed)*30 #1.2m is the length of the area covered, (for 1m height) 30 is the number of frames per second, drone_speed in m/s
+	
+#This function will choose frames from the detection directory accroding to the region 
+#(specified by the height, and the speed, lense of the camera "fixed in our case")
+def selectFrames(detection_directory, classification_directory, videoURL):
+	list_of_detected_frames = listOfNamesWithoutExtension(listOfFilesInDirectory(detection_directory + '\\Detected'))
+	take_frame_flag = True
+	region_number = 1
+	for x in list_of_detected_frames:
+		if(take_frame_flag == True and x < (region_number*frames_in_region)):
+			#region results will be stored in the storage system
+			region_result = {}
+			region_result['frameURL'] =  detection_directory + '\\Detected' + '\\' + str(x) + '.jpg'
+			region_result['videoURL'] = videoURL
+			region_result['timeOfAppearance'] = x/30.0
 			
-	for x in itemlist:
-		try :
-			os.system('copy missionID' + str(x) + '.mp4 C:\tensorflow1\models\research\object_detection\missionID' + str(x) + '.mp4')
-			print('Copied' + str(x))
-		except:
-			print('Couldnt Copy' + str(x))
+			take_frame_flag = False
+			
+			count_detected_objects = 0
+			list_of_detected_objects = listOfNamesWithoutExtension(listOfFilesInDirectory(detection_directory + '\\Cropped')) #list of cropped data
+			for y in list_of_detected_objects:
+				if x == y.split('-')[0]: #Check if the file name has the same prefix
+					count_detected_objects += 1 # increment the number of detected objects
+			
+			#store the number of detected objects in that frame
+			region_result['numberOfDetectedObjects'] = count_detected_objects
+			region_result['objectsDetected'] = []
+			
+			for i in range(1, count_detected_objects + 1):
+				runClassificationSystem(str(x) + '-' + str(i) + '.jpg')
+				classification_result = readClassificationResults()
+				#store the data of the classified object in the region result
+				region_result['objectsDetected'].append({'frameCroppedURL' : str(x) + '-' + str(i) + '.jpg', 'detectedSpecie' : classification_result[0], 'detectedScore' : classification_result[1]})
+			
+			#send the data of the region_result to the storage system
 
-
-
-copyReceivedVideosToDetection()
-
-'''
-
-
-import os
-
-
-'''
-#detection
-location_of_detection_program = 'C:\\tensorflow1\\models\\research\\object_detection'
-name_of_detection_program = 'Object_detection_video.py'
-location_of_the_data = 'C:\\Users\\Administrator\\Desktop\\CMSTControllingSystem\\CMST\\Server\\DetectionSystem\\ReceivedData\\' #in our case the video's location
-data_file_name = 'missionID1.mp4' #name of the video
-os.system('activate tensorflow1 & cd ' + location_of_detection_program + ' & python ' + name_of_detection_program + ' ' + location_of_the_data + data_file_name)
-
-
-#classification
-location_of_classification_program = 'C:\\Users\\Administrator\\Desktop\\TurtleClassification'
-name_of_classification_program = 'TestCNN.py'
-
-data_file_name2 = '1.jpg' #cropped image file name 
-
-#write the address to the file 
-F = open("C:\\Users\\Administrator\\Desktop\\TurtleClassification\\TestImageAddress.txt","w") 
-F.write('C:\\New Project\\Detected\\Cropped\\' + data_file_name2)
-F.close()
-
-
-os.system('activate MATLAB & cd ' + location_of_classification_program + ' & python ' + name_of_classification_program)
-
-
-
-'''
-
-
-list_of_files = os.listdir('C:\\New Project\\Detected\\Cropped')
-print(list_of_files)
-
-list_of_files_names = [] #list of files names without the extension
-for x in list_of_files:
-    list_of_files_names.append(x.split('.')[0])
-print(list_of_files_names)
-
-#list_of_files = [str(x) for x in list_of_files x.split('.')[0] == is.digit()]
