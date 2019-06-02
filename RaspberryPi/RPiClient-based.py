@@ -67,7 +67,7 @@ def runSystsem(data):
     videoDuration = 10 #video duration in sec
     numberOfVideos = data['NumberOfVideos']
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
-    ' & python ServerTransmission.py ' + str(numberOfVideos))
+    ' & python ServerTransmission.py '  + str(data['missionID']) + ' ' + str(numberOfVideos))
 
 
 if __name__ == '__main__':
