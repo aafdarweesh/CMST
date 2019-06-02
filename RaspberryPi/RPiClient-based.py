@@ -21,19 +21,17 @@ new Mission json (height in m, speed in m/s, videoDuration is 10s)
 def getNewMission():
     url = "http://158.176.132.242:5000" #url of the RPiServer
     #getMission Request
-    data = {}
+    data = {"serialNumber": serialNumber}
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     flag = False
     while flag == False:
         sleep(1) #sleep for 3 sec and send another request to the server, asking for the mission
 
         try:
-            req = requests.get(url+"/readNewMission")
+            req = requests.post(url+"/readNewMission", data=json.dumps(data), headers=headers)
             print("After the request")
             print(req.json())
-            if req.json()['serialNumber'] == serialNumber:
-                flag = req.json()['newMissionFlag']
-            else:
-                continue
+            flag = req.json()['newMissionFlag']
             print(flag)
             data = req.json()
             pickle_out = open("Mission.txt","wb")
