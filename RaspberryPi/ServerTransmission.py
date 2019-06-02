@@ -7,6 +7,9 @@ import requests #for the HTTP requests
 #import schedule #pip install schedule
 import os
 
+#Pi serial Number
+serialNumber = str(os.system('cat /proc/cpuinfo | grep Serial | cut -d \' \' -f 2')
+print('Serial Number of the Pi is : ' + serialNumber)
 
 missionID = str(sys.argv[1])
 numberOfVideos = int(sys.argv[2])
@@ -64,7 +67,7 @@ def updateStatusWithServer():
         generatedListOfVideos = checkFullyGeneratedVideos()
 
         url = "http://158.176.132.242:5000" #url of the RPiServer
-        data = {'missionID' : missionID, 'serialNumber' : 'serialNumber',
+        data = {'missionID' : missionID, 'serialNumber' : serialNumber,
         'listOfGeneratedVideos' : generatedListOfVideos}
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         
