@@ -8,7 +8,7 @@ import requests #for the HTTP requests
 import os
 
 #Pi serial Number
-serialNumber = str(os.system('cat /proc/cpuinfo | grep Serial | cut -d \' \' -f 2')
+serialNumber = str(os.system('cat /proc/cpuinfo | grep Serial | cut -d \' \' -f 2'))
 print('Serial Number of the Pi is : ' + serialNumber)
 
 missionID = str(sys.argv[1])
