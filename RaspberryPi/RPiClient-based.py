@@ -4,8 +4,9 @@ import pickle # to store and retrieve dictionaries from files
 import json
 import os
 
-
-
+serialNumber = str(os.system('cat /proc/cpuinfo | grep Serial | cut -d \' \' -f 2')
+print('Serial Number of the Pi is : ' + serialNumber)
+                   
 '''
 new Mission json (height in m, speed in m/s, videoDuration is 10s)
 {
@@ -26,21 +27,24 @@ def getNewMission():
         sleep(1) #sleep for 3 sec and send another request to the server, asking for the mission
 
         try:
-          req = requests.get(url+"/readNewMission")
-          print("After the request")
-          print(req.json())
-          flag = req.json()['newMissionFlag']
-          print(flag)
-          data = req.json()
-          pickle_out = open("Mission.txt","wb")
-          pickle.dump(req.json(), pickle_out)
-          pickle_out.close()
-          '''
-          with open('Mission.txt', 'w') as outfile:
+            req = requests.get(url+"/readNewMission")
+            print("After the request")
+            print(req.json())
+            if req.json()['serialNumber'] == serialNumber:
+                flag = req.json()['newMissionFlag']
+            else:
+                continue
+            print(flag)
+            data = req.json()
+            pickle_out = open("Mission.txt","wb")
+            pickle.dump(req.json(), pickle_out)
+            pickle_out.close()
+            '''
+            with open('Mission.txt', 'w') as outfile:
               print (req.json())
               pickle.dump(req.json(), outfile)
-          '''
-          print("RPiClient get the new Mission : " + str(req.status_code) + " !!!")
+            '''
+            print("RPiClient get the new Mission : " + str(req.status_code) + " !!!")
         except Exception as e:
             print (str(e))
             print("Couldn't connect to RPiServer to get the new Mission !!!")
