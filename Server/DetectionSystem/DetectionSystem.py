@@ -35,6 +35,7 @@ MAIN_DIRECTORY = 'C:\\CMSTData'
 
 '''
 json file format that will be sent to the detection server
+#incase having GPS module
 {
 'missionID' : 'missionID',
 'videoID' : 'videoID',
@@ -43,13 +44,12 @@ json file format that will be sent to the detection server
 'location' : {'lat': 35.24797179165725, 'lng': 33.022986722853716}
 }
 
-
+#if no GPS module
 {
 "missionID" : "missionID",
 "videoID" : "videoID",
 "videoContent" : "videoContent",
-'startingTime' : 'startingTime',
-'location' : {'lat': 35.24797179165725, 'lng': 33.022986722853716}
+
 }
 '''
 
@@ -58,31 +58,62 @@ json file format that will be sent to the detection server
 #This function will be moved to the detection system
 @app.route('/ReceiveVideo', methods = ['POST'])
 def ReceiveVideo():
-    global MAIN_DIRECTORY
-    videoName = ''
+	global MAIN_DIRECTORY
+	videoName = ''
     #videoName += str(request.json['missionID'])
-    videoName += str(request.json['videoID'])
-
-    print("Before the video content conversion")
-    receivedEncodedVideo = open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", 'w')
-    receivedEncodedVideo.write(request.json['videoContent'])
+	videoName += str(request.json['videoID'])
+	
+	print("Before the video content conversion")
+	receivedEncodedVideo = open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", 'w')
+	receivedEncodedVideo.write(request.json['videoContent'])
 
     #Decode the encoded video back to the same format
-    uu.decode(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\" + videoName + ".mp4")
+	uu.decode(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\" + videoName + ".mp4")
 
-    itemlist = []
-    try :
-        with open (MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'rb') as fp:
-            itemlist = pickle.load(fp)
-            data['listOfReceivedVideos'] = itemlist
-    except:
-            print("Nothing in the file")
+	#Read from the mission the received videos 
+	itemlist = []
+	try :
+		with open (MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'rb') as fp:
+			itemlist = pickle.load(fp)
+			data['listOfReceivedVideos'] = itemlist
+	except:
+		print("Nothing in the file")
 			
-    itemlist.append(request.json['videoID'])
-    with open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'wb') as fp:
-        pickle.dump(itemlist, fp)
+	#write in the file that the video is received
+	itemlist.append(request.json['videoID'])
+	with open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + '\\ReceivedDataMetaData.txt', 'wb') as fp:
+		pickle.dump(itemlist, fp)
 	
-    return jsonify("Received!")
+	
+	
+	#print(videoName)
+	
+	#get the location of the video
+	newpath = MAIN_DIRECTORY + '\\' + str(request.json['missionID'])
+	lat = 0.0
+	lng = 0.0
+	with open(newpath + '\\Missions.txt') as json_file:
+		newMission = json.load(json_file)
+		#print(newMission)
+		lat = newMission['flightConfigurations']['videoLocations'][int(request.json['videoID'])]['lat']
+		lng = newMission['flightConfigurations']['videoLocations'][int(request.json['videoID'])]['lng']
+	
+	#Update the database 
+	#Data related to the video : (videoURL, missionID, startingTime, location) "starting time, relative to the mission starting time, assuming video duration is 10sec"
+	#INSERT INTO `detection`.`video` (`videoUrl`, `missionID`, `latitude`, `longitude`, `startingTime`) VALUES ('resources/videos/video3.mp4', '1', '35.334666', '33.493127', '30');
+	#Connect to the database
+	mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="detection")
+
+	mycursor = mydb.cursor()
+
+	sql = 'INSERT INTO detection.video (videoUrl, missionID, latitude, longitude, startingTime) VALUES ('
+	sql += '\''  + str('C:/CMSTData' + '/' + str(request.json['missionID']) + "/ReceivedData/" + videoName +'.mp4,')
+	sql += '\',\'' + str(request.json['missionID']) + '\', ' + str(lat) + ',' + str(lng) + ',' + str(int(videoName)*10) +')'
+	
+	mycursor.execute(sql)
+	mydb.commit()
+	
+	return jsonify("Received!")
 
 
 #This request is evoked once the RaspberryPi is on and connected to the internet to update the IP with the server
