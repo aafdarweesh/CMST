@@ -5,6 +5,9 @@ import json
 import os
 
 
+
+
+
 #This function will invoke the detection and classification systems on the server
 def confirmReceivingMission(data):
     url = "http://158.176.132.242:5000" #url of the RPiServer
