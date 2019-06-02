@@ -9,6 +9,9 @@ import random
 
 import math
 
+import mysql.connector
+
+
 #Structure of the Direcotries to be used for storing the data
 # C:\CMSTData
 # --> \MissionID
@@ -150,21 +153,49 @@ def selectFrames(video_number):
 				region_result['numberOfDetectedObjects'] = count_detected_objects
 				region_result['objectsDetected'] = []
 				
+				#Store the data in the database for that region
+				#INSERT INTO `detection`.`detectedobject` (`sightingUrl`, `objectNumber`, `property1Value`, `objectName`, `accuracy`, `url`) VALUES ('resources/sightings/163937_web11.jpg', '1', 'Loggerhead', 'Sea Turtle', '50', '/resources/wallpaper.jpg');
+				#Connect to the database
+				mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="detection")
+
+				mycursor = mydb.cursor()
+
+				sqlMain = 'INSERT INTO detection.detectedobject (sightingUrl, objectNumber, property1Value, objectName, accuracy, url) VALUES ('
+				sqlMain += '\'' + 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\''
+				
+				
 				if count_detected_objects > 1:
 					for i in range(1, count_detected_objects + 1):
 						runClassificationSystem(video_number, str(x) + '-' + str(i) + '.jpg')
 						classification_result = readClassificationResults()
 						#store the data of the classified object in the region result
 						region_result['objectsDetected'].append({'frameCroppedURL' : str(x) + '-' + str(i) + '.jpg', 'detectedSpecie' : classification_result[1], 'detectedScore' : classification_result[0]})
+						
+						sql = ',\'' + str(i) + '\',\'' + str(classification_result[1]) + '\', \'Sea Turtle\', \'' + str(classification_result[0]) + '\', \''
+						sql += 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '-' + str(i) + '.jpg\''
+						
+						#execute the sql code
+						mycursor.execute(sqlMain + sql)
+						mydb.commit()
+								
+						
 				else:
 					runClassificationSystem(video_number, str(x) + '.jpg')
 					classification_result = readClassificationResults()
 					#store the data of the classified object in the region result
 					region_result['objectsDetected'].append({'frameCroppedURL' : str(x) + '.jpg', 'detectedSpecie' : classification_result[1], 'detectedScore' : classification_result[0]})
-				
+					sql = ',\'1\',\'' + str(classification_result[1]) + '\', \'Sea Turtle\', \'' + str(classification_result[0]) + '\', \''
+					sql += str('C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '.jpg\'')
+					
+					#execute the sql code
+					mycursor.execute(sqlMain + sql)
+					mydb.commit()
+					
 				print('\n\n\n\n')
 				print(region_result)
 				print('\n\n\n\n')
+				
+				
 				
 				f = open(MAIN_DIRECTORY + '\\' + str(missionID) + '\\ClassificationResults.txt', 'a+')
 				f.write(region_result)
