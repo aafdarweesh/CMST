@@ -4,6 +4,10 @@ import pickle # to store and retrieve dictionaries from files
 import json
 import os
 
+
+
+
+
 serialNumber = str(os.system('cat /proc/cpuinfo | grep Serial | cut -d \' \' -f 2'))
 print('Serial Number of the Pi is : ' + serialNumber)
                    
