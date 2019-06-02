@@ -244,12 +244,13 @@ def confirmReceivingMission():
 		
 		#if pi received the mission (start the communication with the detection system and classification system)
 		#communication system parameters (missionID, drone_height, drone_speed, number_of_videos)
-		runningCommand = './CommunicationWithDetectionClassificationStorage.py ' + str(request.json['missionID'])
+		runningCommand = 'python ./CommunicationWithDetectionClassificationStorage.py ' + str(request.json['missionID'])
 		runningCommand += ' ' + str(request.json['flightConfigurations']['height'])
 		runningCommand += ' ' + str(request.json['flightConfigurations']['speed'])
 		runningCommand += ' ' + str(request.json['NumberOfVideos'])
 		#run pipLine fir that program (the communication with the detection and classification systems)
-		p = subprocess.Popen([sys.executable, runningCommand], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+		#p = subprocess.Popen([sys.executable, runningCommand], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+		os.system(runningCommand + ' &')
 		return('True')
 	except:
 		return('False')
