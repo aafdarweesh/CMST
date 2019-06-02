@@ -8,8 +8,8 @@ import requests #for the HTTP requests
 import os
 
 
-
-numberOfVideos = int(sys.argv[1])
+missionID = str(sys.argv[1])
+numberOfVideos = int(sys.argv[2])
 
 #LogFile = open('logFile.txt', 'w')
 #LogFile.write('LOG FILE\n')
@@ -64,7 +64,7 @@ def updateStatusWithServer():
         generatedListOfVideos = checkFullyGeneratedVideos()
 
         url = "http://158.176.132.242:5000" #url of the RPiServer
-        data = {'missionID' : 'missionID', 'serialNumber' : 'serialNumber',
+        data = {'missionID' : missionID, 'serialNumber' : 'serialNumber',
         'listOfGeneratedVideos' : generatedListOfVideos}
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         
@@ -129,7 +129,7 @@ def sendVideoToDetection(videoNumber):
 	print("Inside Send video to Detection System function!")
 
 	url = "http://158.176.132.242:5000/ReceiveVideo" #url of the detection server
-	data = {'missionID' : 'missionID', 'videoID' : str(videoNumber), 'videoContent' : str(videoIntoString(videoNumber))}
+	data = {'missionID' : missionID, 'videoID' : str(videoNumber), 'videoContent' : str(videoIntoString(videoNumber))}
 	headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
 	#according to some sources : req.status_codes
