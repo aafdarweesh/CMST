@@ -166,6 +166,11 @@ def selectFrames(video_number):
 				print(region_result)
 				print('\n\n\n\n')
 				
+				f = open('./ClassificationResults', 'a+')
+				f.write(region_result)
+				f.close()	
+				
+				
 				break #skip checking the rest
 			
 			#send the data of the region_result to the storage system

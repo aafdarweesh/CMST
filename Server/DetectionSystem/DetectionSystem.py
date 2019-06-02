@@ -15,6 +15,9 @@ import pickle
 
 import subprocess
 
+import mysql.connector
+
+
 
 #Common Class that are going to be used
 import User, DroneConfigurations, Mission, RaspberryPi
@@ -155,44 +158,114 @@ new Mission json (height in m, speed in m/s, videoDuration is 10s)
 "flightConfigurations":{"height" : 10, "speed" : 1, "locations":[]}
 }
 '''
-#reference : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
+#reference 1 : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
+#reference 2 : https://www.w3schools.com/python/python_mysql_insert.asp
 @app.route('/assignNewMission', methods=['POST'])
 #assign the new mission to the RaspberryPi, this method will be invoked upon update on the DB for new mission
 def assignMission():
+
+	#Connect to the database
+	mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="detection")
+
+	mycursor = mydb.cursor()
+
+	#insert locations list 
+	lengthOfLocation = len(request.json['flightConfigurations']['locations'])
+
+	sql = "INSERT INTO detection.path (pathID, areaID, numberOfSteps) VALUES (NULL, 1," + str(lengthOfLocation) + ");"
+	mycursor.execute(sql)
+	mydb.commit()
+
+
+	pathID = 0
+	#get the path id 
+	sql = "SELECT * FROM path ORDER BY pathID DESC"
+	mycursor.execute(sql)
+	myresult = mycursor.fetchall()
+
+
+	pathID = myresult[0][0]
+	#print('Locations pathID is : ' + str(pathID))
+	
+	
+	#insert the locations into the database 
+	for i in range(len(request.json['flightConfigurations']['locations'])):
+		sql = "INSERT INTO detection.pathsteps (pathID, stepNumber, latitude, longitude) VALUES (" 
+		sql += str(pathID) + ", " + str(i+1) + ", " + str(request.json['flightConfigurations']['locations'][i]['lat']) 
+		sql += ", " + str(request.json['flightConfigurations']['locations'][i]['lng'])  + ");"
+		
+		mycursor.execute(sql)
+		mydb.commit()
+
+	#insert the new mission to the database
+	sql = "INSERT INTO mission (missionID, username, droneID, pathID, length, numberOfVideos, state) VALUES "
+	sql += "(NULL, \'tommy\', \'" + str(request.json['serialNumber']) + "\', " + str(pathID) + ", 10, " 
+	sql += str(len(request.json['flightConfigurations']['videoLocations'])) + ", 0);"
+	print(sql)
+	mycursor.execute(sql)
+	mydb.commit()
+
+	#print(mycursor.rowcount, "record inserted.")
+
+	#get the mission id 
+	sql = "SELECT * FROM mission ORDER BY missionID DESC"
+	mycursor.execute(sql)
+	myresult = mycursor.fetchall()
+	missionID = myresult[0][0]
+	
+	data = request.json
+	data['missionID'] = missionID
+	
+	#create new Directory for the mission
+	newpath = MAIN_DIRECTORY + '\\' + str(data['missionID'])
+	if not os.path.exists(newpath):
+		os.makedirs(newpath) #create the new mission directory (will store all data related to the mission there (images, videos, some meta files)
+		os.makedirs(newpath + '\\ReceivedData') #This directory will be used to store the received videos
+
+		with open(newpath + '\\ReceivedDataMetaData.txt', 'w'):
+			pass
+
+	with open(newpath + '\\Missions.txt', 'w') as outfile:
+		print (data)
+		json.dump(data, outfile)
+	return jsonify(data)
+
     #get the new mission details from the storage for the given RaspberryPi
-    '''
-    req = urllib.request.Request(url='http://StorageIP:8082/RetrieveMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
+	'''
+	req = urllib.request.Request(url='http://StorageIP:8082/RetrieveMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
 
-    with urllib.request.urlopen(req) as f:
-        print(f.read().decode("utf-8"))
-        pass
-    '''
-    #newMission = data received from the StorageIP
-    #rPi = data received from the StorageIP
-
-
-    #encode the data
-    #uncomment if we are using VPN to connect with the Pi
-    '''
-    newMission = newMission.encode('ascii') # data should be bytes
-
-    req = urllib.request.Request(url='http://' + rPi.getIP() + ':8000/NewMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
-    res = ''
-    with urllib.request.urlopen(req) as f:
-        res = f.read().decode("utf-8")
-        pass
+	with urllib.request.urlopen(req) as f:
+	print(f.read().decode("utf-8"))
+	pass
+	'''
+	#newMission = data received from the StorageIP
+	#rPi = data received from the StorageIP
 
 
-    if res == 'Valid Operation':
-        return 'Valid Operation'
-    else :
-        return res
+	#encode the data
+	#uncomment if we are using VPN to connect with the Pi
+	'''
+	newMission = newMission.encode('ascii') # data should be bytes
 
-    '''
-    with open('Missions.txt', 'w') as outfile:
-        print (request.json)
-        json.dump(request.json, outfile)
-    return jsonify(request.json)
+	req = urllib.request.Request(url='http://' + rPi.getIP() + ':8000/NewMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
+	res = ''
+	with urllib.request.urlopen(req) as f:
+	res = f.read().decode("utf-8")
+	pass
+
+
+	if res == 'Valid Operation':
+	return 'Valid Operation'
+	else :
+	return res
+
+	'''
+
+	
+	
+
+	
+
 
 '''
 new Mission json (height in m, speed in m/s, videoDuration is 10s)
@@ -208,6 +281,11 @@ new Mission json (height in m, speed in m/s, videoDuration is 10s)
 #reference 2 : https://stackoverflow.com/questions/1274405/how-to-create-new-folder
 @app.route('/readNewMission', methods=['Get'])
 def readNewMission():
+
+	#collect the mission from the database
+
+	'''
+
 	global MAIN_DIRECTORY
 	with open('Missions.txt') as json_file:
 		newMission = json.load(json_file)
@@ -222,6 +300,7 @@ def readNewMission():
 						pass
 
 		return jsonify(newMission)
+	'''
 	
 
 '''
@@ -239,7 +318,7 @@ received Mission json (height in m, speed in m/s, videoDuration is 10s)
 #reference 1 : https://stackoverflow.com/questions/546017/how-do-i-run-another-script-in-python-without-waiting-for-it-to-finish
 #reference 2 : https://docs.python.org/3/library/subprocess.html
 def confirmReceivingMission():
-
+	
 	try:
 		
 		#if pi received the mission (start the communication with the detection system and classification system)
