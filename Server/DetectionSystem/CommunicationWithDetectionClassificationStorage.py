@@ -166,7 +166,7 @@ def selectFrames(video_number):
 				print(region_result)
 				print('\n\n\n\n')
 				
-				f = open('./ClassificationResults', 'a+')
+				f = open(MAIN_DIRECTORY + '\\' + str(missionID) + '\\ClassificationResults.txt', 'a+')
 				f.write(region_result)
 				f.close()	
 				
@@ -203,6 +203,10 @@ def runProgramOnReceivedVideos():
 				listOfReceivedVideos = pickle.load(fp)
 		except:
 				print("Nothing in the file")
+				
+		if len(listOfReceivedVideos) == 0:
+			sleep(3)
+			continue
 
 		listOfDetectedVideos.sort()
 		listOfReceivedVideos.sort()
@@ -223,6 +227,7 @@ def runProgramOnReceivedVideos():
 				runDetectionSystem(x) #run the detection system on that video
 				selectFrames(x) #select frames (eliminate redundant detections in the same region), then run the classification system
 			sleep(1)
+		
 	#When a mission is done, update its state in the database
 			
 #run the system

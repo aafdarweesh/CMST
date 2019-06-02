@@ -17,6 +17,8 @@ import subprocess
 
 import mysql.connector
 
+from datetime import datetime 
+
 
 
 #Common Class that are going to be used
@@ -279,9 +281,34 @@ new Mission json (height in m, speed in m/s, videoDuration is 10s)
 '''
 #reference 1 : https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
 #reference 2 : https://stackoverflow.com/questions/1274405/how-to-create-new-folder
-@app.route('/readNewMission', methods=['Get'])
+@app.route('/readNewMission', methods=['Post'])
 def readNewMission():
 
+	#trying to fetch the mission data from the database
+	try:
+
+		#Connect to the database
+		mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="detection")
+
+		mycursor = mydb.cursor()
+
+
+		#get the mission id 
+		sql = "SELECT * FROM mission WHERE droneID = \'" + str(request.json['serialNumber']) + "\' ORDER BY missionID ASC"
+		mycursor.execute(sql)
+		myresult = mycursor.fetchall()
+		missionID = myresult[0][0]
+		
+		newpath = MAIN_DIRECTORY + '\\' + str(missionID)
+		with open(newpath + '\\Missions.txt') as json_file:
+			newMission = json.load(json_file)
+		
+			return jsonify(newMission)
+			
+		return 'Couldn\'t find mission file'
+	except:
+			return 'Couldn\'t connect to the DB new mission'
+	
 	#collect the mission from the database
 
 	'''
@@ -317,8 +344,20 @@ received Mission json (height in m, speed in m/s, videoDuration is 10s)
 #The pi confirms that it received the mission with the starting timestamp
 #reference 1 : https://stackoverflow.com/questions/546017/how-do-i-run-another-script-in-python-without-waiting-for-it-to-finish
 #reference 2 : https://docs.python.org/3/library/subprocess.html
+#refernece 3 : https://stackoverflow.com/questions/34046634/insert-into-a-mysql-database-timestamp
 def confirmReceivingMission():
+	#Connect to the database
+	mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="detection")
+
+	mycursor = mydb.cursor()
 	
+	#Update the status of the mission to running
+	#UPDATE `detection`.`mission` SET `startingTimeStamp`='2019-08-20 15:21:15', `state`='1' WHERE `missionID`='5';
+	sql = 'UPDATE detection.mission SET startingTimeStamp = \' ' + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) 
+	sql += '\', state = \'1\' WHERE missionID=' + str(request.json['missionID']) + ';'
+	mycursor.execute(sql)
+	mydb.commit()
+
 	try:
 		
 		#if pi received the mission (start the communication with the detection system and classification system)
@@ -329,7 +368,15 @@ def confirmReceivingMission():
 		runningCommand += ' ' + str(request.json['NumberOfVideos'])
 		#run pipLine fir that program (the communication with the detection and classification systems)
 		#p = subprocess.Popen([sys.executable, runningCommand], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-		os.system(runningCommand + ' &')
+		os.system(runningCommand)
+		
+		#Update the status of the mission to running
+		#UPDATE `detection`.`mission` SET `startingTimeStamp`='2019-08-20 15:21:15', `state`='1' WHERE `missionID`='5';
+		sql = 'UPDATE detection.mission SET endingTimeStamp = \' ' + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) 
+		sql += '\' , state = \'2\' WHERE missionID = ' + str(request.json['missionID']) + ';'
+		mycursor.execute(sql)
+		mydb.commit()
+		
 		return('True')
 	except:
 		return('False')
