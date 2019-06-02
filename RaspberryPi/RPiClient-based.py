@@ -46,33 +46,20 @@ def getNewMission():
         except Exception as e:
             print (str(e))
             print("Couldn't connect to RPiServer to get the new Mission !!!")
-    confirmReceivingMission(data)
-    runSystsem(data)
-
-def readMission():
-    pickle_in = open("Mission.txt","rb")
-    missionData = pickle.load(pickle_in)
-    print(missionData)
-
     
-def confirmReceivingMission(data):
-    url = "http://158.176.132.242:5000" #url of the RPiServer
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    try:
-        req = requests.post(url + "/confirmReceivingMission", data=json.dumps(data), headers=headers)
-        print('Receiving mission is confirmed')
-    except:
-        print('Error Connecting to the server to confirm receiving the mission')
-
+    runSystsem(data)
+    
+    
+    
 def runSystsem(data):
     print(data)
     videoDuration = 10 #video duration in sec
     numberOfVideos = data['NumberOfVideos']
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
-    ' & python ServerTransmission.py '  + str(data['missionID']) + ' ' + str(numberOfVideos))
+    ' & python ServerTransmission.py '  + str(data['missionID']) + ' ' + str(numberOfVideos)) + ' & python ConfirmReceivingMission.py'
 
 
 if __name__ == '__main__':
     getNewMission()
-    readMission()
+    
   
