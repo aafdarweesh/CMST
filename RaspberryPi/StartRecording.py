@@ -3,6 +3,9 @@ from time import sleep
 import sys
 import datetime
 
+
+
+
 duration = sys.argv[1]
 numberOfVideos = sys.argv[2]
 
