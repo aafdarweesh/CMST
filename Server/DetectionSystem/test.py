@@ -73,14 +73,36 @@ os.rename('C:\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_n
 #Connect to the database
 mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="detection")
 
+#khaled's file
+import mysql.connector
+
+
+
+missionID = 4
+x = 66
+i = 2
+video_number = 0
+
+classification_result = [0.5345, 'green']
+
+
 mycursor = mydb.cursor()
+
+
+
+sql = 'INSERT INTO detection.video (videoUrl, missionID, latitude, longitude, startingTime) VALUES ('
+sql += '\''  + str('./CMSTData' + '/' + str(missionID) + "/ReceivedData/" + str(video_number) +'.mp4')
+sql += '\',\'' + str(missionID) + '\', ' + str(2.35) + ',' + str(6.31) + ',' + str(int(video_number)*10) +')'
+
+mycursor.execute(sql)
+mydb.commit()
 
 
 #INSERT INTO `detection`.`sighting` (`sightingUrl`, `videoUrl`, `timeOfAppearance`, `numberOfObjects`) VALUES ('resources/sightings/123.png', 'resources/videos/video1.mp4', '7', '1');
 sqlMain1 = 'INSERT INTO detection.sighting (sightingUrl, videoUrl, timeOfAppearance, numberOfObjects) VALUES ('
 sqlMain1 += '\'' + './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\','
-sqlMain1 += '\'' + './CMSTData/' + str(missionID) +'/DetectionFolder/ReceivedData/' + str(video_number) + '.mp4\','
-sqlMain1 += '\'' + str(float(int(x)/30.0)) + '\', \'' + str(count_detected_objects) + '\')'
+sqlMain1 += '\'' + './CMSTData/' + str(missionID) +'/ReceivedData/' + str(video_number) + '.mp4\','
+sqlMain1 += '\'' + str(float(int(x)/30.0)) + '\', \'' + str(1) + '\')'
 
 #execute the sql code
 mycursor.execute(sqlMain1)
@@ -91,6 +113,8 @@ mydb.commit()
 
 sqlMain = 'INSERT INTO detection.detectedobject (sightingUrl, objectNumber, property1Value, objectName, accuracy, url) VALUES ('
 sqlMain += '\'' + './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\''
+
+
 sql = ',\'' + str(i) + '\',\'' + str(classification_result[1]) + '\', \'Sea Turtle\', \'' + str(classification_result[0]) + '\', \''
 sql += './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '-' + str(i) + '.jpg\')'
 
@@ -98,24 +122,11 @@ sql += './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) +
 mycursor.execute(sqlMain + sql)
 mydb.commit()
 
+
 sql = ',\'1\',\'' + str(classification_result[1]) + '\', \'Sea Turtle\', \'' + str(classification_result[0]) + '\', \''
 sql += str('./CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '.jpg\')')
 
 #execute the sql code
 mycursor.execute(sqlMain + sql)
 mydb.commit()
-
-
-
-sql = 'INSERT INTO detection.video (videoUrl, missionID, latitude, longitude, startingTime) VALUES ('
-sql += '\''  + str('./CMSTData' + '/' + str(request.json['missionID']) + "/ReceivedData/" + videoName +'.mp4')
-sql += '\',\'' + str(request.json['missionID']) + '\', ' + str(lat) + ',' + str(lng) + ',' + str(int(videoName)*10) +')'
-
-mycursor.execute(sql)
-mydb.commit()
-
-
-
-				
-				
 
