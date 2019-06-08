@@ -107,7 +107,7 @@ def ReceiveVideo():
 	mycursor = mydb.cursor()
 
 	sql = 'INSERT INTO detection.video (videoUrl, missionID, latitude, longitude, startingTime) VALUES ('
-	sql += '\''  + str('C:/CMSTData' + '/' + str(request.json['missionID']) + "/ReceivedData/" + videoName +'.mp4')
+	sql += '\''  + str('./CMSTData' + '/' + str(request.json['missionID']) + "/ReceivedData/" + videoName +'.mp4')
 	sql += '\',\'' + str(request.json['missionID']) + '\', ' + str(lat) + ',' + str(lng) + ',' + str(int(videoName)*10) +')'
 	
 	mycursor.execute(sql)

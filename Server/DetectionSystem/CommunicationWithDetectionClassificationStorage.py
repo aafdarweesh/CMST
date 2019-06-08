@@ -163,8 +163,8 @@ def selectFrames(video_number):
 				
 				#INSERT INTO `detection`.`sighting` (`sightingUrl`, `videoUrl`, `timeOfAppearance`, `numberOfObjects`) VALUES ('resources/sightings/123.png', 'resources/videos/video1.mp4', '7', '1');
 				sqlMain1 = 'INSERT INTO detection.sighting (sightingUrl, videoUrl, timeOfAppearance, numberOfObjects) VALUES ('
-				sqlMain1 += '\'' + 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\','
-				sqlMain1 += '\'' + 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/ReceivedData/' + str(video_number) + '.mp4\','
+				sqlMain1 += '\'' + './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\','
+				sqlMain1 += '\'' + './CMSTData/' + str(missionID) +'/DetectionFolder/ReceivedData/' + str(video_number) + '.mp4\','
 				sqlMain1 += '\'' + str(float(int(x)/30.0)) + '\', \'' + str(count_detected_objects) + '\')'
 				
 				#execute the sql code
@@ -172,7 +172,7 @@ def selectFrames(video_number):
 				#mydb.commit()
 
 				sqlMain = 'INSERT INTO detection.detectedobject (sightingUrl, objectNumber, property1Value, objectName, accuracy, url) VALUES ('
-				sqlMain += '\'' + 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\''
+				sqlMain += '\'' + './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\''
 				
 				
 				if count_detected_objects > 1:
@@ -183,7 +183,7 @@ def selectFrames(video_number):
 						region_result['objectsDetected'].append({'frameCroppedURL' : str(x) + '-' + str(i) + '.jpg', 'detectedSpecie' : classification_result[1], 'detectedScore' : classification_result[0]})
 						
 						sql = ',\'' + str(i) + '\',\'' + str(classification_result[1]) + '\', \'Sea Turtle\', \'' + str(classification_result[0]) + '\', \''
-						sql += 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '-' + str(i) + '.jpg\')'
+						sql += './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '-' + str(i) + '.jpg\')'
 						
 						#execute the sql code
 						#mycursor.execute(sqlMain + sql)
@@ -196,7 +196,7 @@ def selectFrames(video_number):
 					#store the data of the classified object in the region result
 					region_result['objectsDetected'].append({'frameCroppedURL' : str(x) + '.jpg', 'detectedSpecie' : classification_result[1], 'detectedScore' : classification_result[0]})
 					sql = ',\'1\',\'' + str(classification_result[1]) + '\', \'Sea Turtle\', \'' + str(classification_result[0]) + '\', \''
-					sql += str('C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '.jpg\')')
+					sql += str('./CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '.jpg\')')
 					
 					#execute the sql code
 					#mycursor.execute(sqlMain + sql)
