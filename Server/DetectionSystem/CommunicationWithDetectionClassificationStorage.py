@@ -170,6 +170,13 @@ def selectFrames(video_number):
 				#execute the sql code
 				#mycursor.execute(sqlMain1)
 				#mydb.commit()
+				
+				
+				#Move the detected frame to the UI to be rendered
+				uiFrameLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_number) + '\\Detected\\' + str(x) + '.jpg'
+				os.rename('C:\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_number) + '\\Detected\\' + str(x) + '.jpg', uiFrameLocation)
+				
+				
 
 				sqlMain = 'INSERT INTO detection.detectedobject (sightingUrl, objectNumber, property1Value, objectName, accuracy, url) VALUES ('
 				sqlMain += '\'' + './CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\''
@@ -189,6 +196,12 @@ def selectFrames(video_number):
 						#mycursor.execute(sqlMain + sql)
 						#mydb.commit()
 								
+								
+								
+						#Move the cropped frame to the UI to be rendered
+						uiFrameCroppedLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_number) + '\\Cropped\\' + str(x) + '-' + str(i) + '.jpg'
+						os.rename('C:\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_number) + '\\Cropped\\' + str(x) + '-' + str(i) + '.jpg', uiFrameCroppedLocation)
+				
 						
 				else:
 					runClassificationSystem(video_number, str(x) + '.jpg')
@@ -201,6 +214,12 @@ def selectFrames(video_number):
 					#execute the sql code
 					#mycursor.execute(sqlMain + sql)
 					#mydb.commit()
+					
+					#Move the cropped frame to the UI to be rendered
+					uiFrameCroppedLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_number) + '\\Cropped\\' + str(x) + '.jpg'
+					os.rename('C:\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_number) + '\\Cropped\\' + str(x) + '.jpg', uiFrameCroppedLocation)
+				
+					
 					
 				print('\n\n\n\n')
 				print(region_result)
@@ -238,14 +257,14 @@ def createVideoDirectory(video_number):
 
 #as in our UI we need to save the content to be displayed in the same directory, we are moving after processing to be rendered from there
 def moveVideoToUI(video_number):
-	uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData' + str(missionID) + '\\' + 'ReceivedData\\' + str(video_number) + '.mp4'
+	uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) + '\\' + 'ReceivedData\\' + str(video_number) + '.mp4'
 	os.rename(location_of_the_video + str(video_number) + '.mp4', uiVideoLocation)
 
 
 #Create Video folder for the videoID for UI (inside the DetectionFolder with (Detected, Cropped) subFolders
 def createVideoDirectoryUI(video_number):
 	#create new Directory for the mission
-	newpath = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData' + str(missionID) + '\\DetectionFolder\\' + str(video_number) 
+	newpath = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) + '\\DetectionFolder\\' + str(video_number) 
 	if not os.path.exists(newpath):
 		os.makedirs(newpath)
 		
