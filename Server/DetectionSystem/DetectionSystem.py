@@ -107,7 +107,7 @@ def ReceiveVideo():
 	mycursor = mydb.cursor()
 
 	sql = 'INSERT INTO detection.video (videoUrl, missionID, latitude, longitude, startingTime) VALUES ('
-	sql += '\''  + str('C:/CMSTData' + '/' + str(request.json['missionID']) + "/ReceivedData/" + videoName +'.mp4,')
+	sql += '\''  + str('C:/CMSTData' + '/' + str(request.json['missionID']) + "/ReceivedData/" + videoName +'.mp4')
 	sql += '\',\'' + str(request.json['missionID']) + '\', ' + str(lat) + ',' + str(lng) + ',' + str(int(videoName)*10) +')'
 	
 	mycursor.execute(sql)
@@ -258,9 +258,19 @@ def assignMission():
 		with open(newpath + '\\ReceivedDataMetaData.txt', 'w'):
 			pass
 
+
 	with open(newpath + '\\Missions.txt', 'w') as outfile:
 		print (data)
 		json.dump(data, outfile)
+
+	#create new Directory for the mission in the UI
+	newpathUI = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(data['missionID'])
+	if not os.path.exists(newpathUI):
+		os.makedirs(newpathUI) #create the new mission directory (will store all data related to the mission there (images, videos, some meta files)
+		os.makedirs(newpathUI + '\\ReceivedData') #This directory will be used to store the received videos
+		os.makedirs(newpathUI + '\\DetectionFolder')
+
+	
 	return jsonify(data)
 
     #get the new mission details from the storage for the given RaspberryPi
@@ -314,7 +324,7 @@ new Mission json (height in m, speed in m/s, videoDuration is 10s)
 #reference 2 : https://stackoverflow.com/questions/1274405/how-to-create-new-folder
 @app.route('/readNewMission', methods=['Post'])
 def readNewMission():
-
+	print(request.json)
 	#trying to fetch the mission data from the database
 	try:
 
@@ -325,7 +335,7 @@ def readNewMission():
 
 
 		#get the mission id 
-		sql = "SELECT * FROM mission WHERE droneID = \'" + str(request.json['serialNumber']) + "\' ORDER BY missionID ASC"
+		sql = "SELECT * FROM mission WHERE droneID = \'" + str('000000003762bf30') + "\' ORDER BY missionID DESC"
 		mycursor.execute(sql)
 		myresult = mycursor.fetchall()
 		missionID = myresult[0][0]
@@ -338,7 +348,7 @@ def readNewMission():
 			
 		return 'Couldn\'t find mission file'
 	except:
-			return 'Couldn\'t connect to the DB new mission'
+		return 'Couldn\'t connect to the DB new mission'
 	
 	#collect the mission from the database
 

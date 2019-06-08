@@ -131,7 +131,7 @@ def selectFrames(video_number):
 	print('Limits are number of regions : ' + str(number_of_regions) + ' , number of frames in region : ' + str(frames_in_region))
 	
 	
-	for region_number in range(1, number_of_regions):
+	for region_number in range(1, number_of_regions+1):
 		take_frame_flag = True
 		for x in list_of_detected_frames:
 			if(take_frame_flag == True and int(x) < int(region_number*frames_in_region) and int(x) > int((region_number-1)*frames_in_region)):
@@ -159,6 +159,17 @@ def selectFrames(video_number):
 				mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="detection")
 
 				mycursor = mydb.cursor()
+				
+				
+				#INSERT INTO `detection`.`sighting` (`sightingUrl`, `videoUrl`, `timeOfAppearance`, `numberOfObjects`) VALUES ('resources/sightings/123.png', 'resources/videos/video1.mp4', '7', '1');
+				sqlMain1 = 'INSERT INTO detection.sighting (sightingUrl, videoUrl, timeOfAppearance, numberOfObjects) VALUES ('
+				sqlMain1 += '\'' + 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\','
+				sqlMain1 += '\'' + 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/ReceivedData/' + str(video_number) + '.mp4\','
+				sqlMain1 += '\'' + str(float(int(x)/30.0)) + '\', \'' + str(count_detected_objects) + '\')'
+				
+				#execute the sql code
+				#mycursor.execute(sqlMain1)
+				#mydb.commit()
 
 				sqlMain = 'INSERT INTO detection.detectedobject (sightingUrl, objectNumber, property1Value, objectName, accuracy, url) VALUES ('
 				sqlMain += '\'' + 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Detected/' + str(x) + '.jpg' + '\''
@@ -175,8 +186,8 @@ def selectFrames(video_number):
 						sql += 'C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '-' + str(i) + '.jpg\')'
 						
 						#execute the sql code
-						mycursor.execute(sqlMain + sql)
-						mydb.commit()
+						#mycursor.execute(sqlMain + sql)
+						#mydb.commit()
 								
 						
 				else:
@@ -188,21 +199,23 @@ def selectFrames(video_number):
 					sql += str('C:/CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_number) + '/Cropped/' + str(x) + '.jpg\')')
 					
 					#execute the sql code
-					mycursor.execute(sqlMain + sql)
-					mydb.commit()
+					#mycursor.execute(sqlMain + sql)
+					#mydb.commit()
 					
 				print('\n\n\n\n')
 				print(region_result)
 				print('\n\n\n\n')
 				
 				
+				with open(MAIN_DIRECTORY + '\\' + str(missionID) + '\\ClassificationResults.txt', "a+") as myfile:
+					myfile.write(str(region_result) + '\n\n')
 				
-				f = open(MAIN_DIRECTORY + '\\' + str(missionID) + '\\ClassificationResults.txt', 'a+')
-				f.write(region_result)
-				f.close()	
+				#f = open(MAIN_DIRECTORY + '\\' + str(missionID) + '\\ClassificationResults.txt', 'a+')
+				#f.write(region_result)
+				#f.close()	
 				
 				
-				break #skip checking the rest
+				#break #skip checking the rest
 			
 			#send the data of the region_result to the storage system
 
@@ -223,7 +236,27 @@ def createVideoDirectory(video_number):
 		os.makedirs(newpath + '\\Cropped')
 	
 
+#as in our UI we need to save the content to be displayed in the same directory, we are moving after processing to be rendered from there
+def moveVideoToUI(video_number):
+	uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData' + str(missionID) + '\\' + 'ReceivedData\\' + str(video_number) + '.mp4'
+	os.rename(location_of_the_video + str(video_number) + '.mp4', uiVideoLocation)
 
+
+#Create Video folder for the videoID for UI (inside the DetectionFolder with (Detected, Cropped) subFolders
+def createVideoDirectoryUI(video_number):
+	#create new Directory for the mission
+	newpath = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData' + str(missionID) + '\\DetectionFolder\\' + str(video_number) 
+	if not os.path.exists(newpath):
+		os.makedirs(newpath)
+		
+	if not os.path.exists(newpath + '\\Detected'):
+		os.makedirs(newpath + '\\Detected')
+	
+	if not os.path.exists(newpath + '\\Cropped'):
+		os.makedirs(newpath + '\\Cropped')
+
+
+#The main objective of this function is to run the videos received on the detection system and take the results fed it to the classification with sync with UI and DB  
 def runProgramOnReceivedVideos():
 	listOfReceivedVideos = []
 	listOfDetectedVideos = []
@@ -253,9 +286,12 @@ def runProgramOnReceivedVideos():
 			if x not in listOfDetectedVideos:
 				print('Checking video number ' + str(x))
 				createVideoDirectory(x) #create video directory in the data
+				createVideoDirectoryUI(x) #create video directory in the UI to send the results there and render it from there
 				
-				listOfDetectedVideos.append(x) #add the video number to the detected videos
-				runDetectionSystem(x) #run the detection system on that video
+				runningDetectionResults = runDetectionSystem(x) #run the detection system on that video (results are true of false "succeeded or not")
+				if (runningDetectionResults == True):
+					moveVideoToUI(x) #move the video to the ui location
+					listOfDetectedVideos.append(x) #add the video number to the detected videos
 				selectFrames(x) #select frames (eliminate redundant detections in the same region), then run the classification system
 			sleep(1)
 		

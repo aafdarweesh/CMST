@@ -1,1 +1,0 @@
-{"newMissionFlag": true, "missionID": 0, "serialNumber": "000000003762bf30", "NumberOfVideos": 1, "flightConfigurations": {"height": 10, "speed": 1, "locations": [{"lat": 13.12, "lng": 13.11}, {"lat": 13.12, "lng": 13.11}, {"lat": 13.12, "lng": 13.11}]}}
