@@ -34,7 +34,7 @@ drone_speed = int(sys.argv[3])
 number_of_videos = int(sys.argv[4])
 
 #Common variables (Detection)
-location_of_detection_program = 'C:\\tensorflow1\\models\\research\\object_detection'
+location_of_detection_program = 'C:\\tensorflow1\\object_detection'
 name_of_detection_program = 'Object_detection_video2.py'
 location_of_the_video = MAIN_DIRECTORY + '\\' + missionID + '\\ReceivedData\\' #in our case the video's location
 
@@ -259,6 +259,7 @@ def createVideoDirectory(video_number):
 def moveVideoToUI(video_number):
 	uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) + '\\' + 'ReceivedData\\' + str(video_number) + '.mp4'
 	os.rename(location_of_the_video + str(video_number) + '.mp4', uiVideoLocation)
+	
 
 
 #Create Video folder for the videoID for UI (inside the DetectionFolder with (Detected, Cropped) subFolders
@@ -287,9 +288,11 @@ def runProgramOnReceivedVideos():
 		except:
 				print("Nothing in the file")
 				
-		if len(listOfReceivedVideos) == 0:
-			sleep(3)
-			continue
+		#if len(listOfReceivedVideos) == 0:
+		#	sleep(3)
+		#	continue
+		
+		sleep(3)
 
 		listOfDetectedVideos.sort()
 		listOfReceivedVideos.sort()
