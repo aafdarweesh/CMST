@@ -19,6 +19,7 @@ import mysql.connector
 
 from datetime import datetime 
 
+from shutil import copyfile
 
 
 #Common Class that are going to be used
@@ -67,9 +68,22 @@ def ReceiveVideo():
 	receivedEncodedVideo = open(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", 'w')
 	receivedEncodedVideo.write(request.json['videoContent'])
 
-    #Decode the encoded video back to the same format
-	uu.decode(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\" + videoName + ".mp4")
-
+	try:
+		#Decode the encoded video back to the same format
+		uu.decode(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\videoTemp.txt", MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\" + videoName + ".mp4")
+		print('After decoding the video')
+	except:
+		print('Invaid format for video decoding')
+		return jsonify("Invalid format for decoding!")
+		 
+	try:
+		#sleep(3) #as the decoding is working independent, this delay is to copy after the decoding process
+		uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) + '\\' + 'ReceivedData\\' + str(request.json['videoID']) + '.mp4'
+		copyfile(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\" + videoName + ".mp4", uiVideoLocation)
+		
+	except:
+		print('Failed copying the file into the UI directory')
+		
 	#Read from the mission the received videos 
 	itemlist = []
 	try :
@@ -335,7 +349,7 @@ def readNewMission():
 
 
 		#get the mission id 
-		sql = "SELECT * FROM mission WHERE droneID = \'" + str('000000003762bf30') + "\' ORDER BY missionID DESC"
+		sql = "SELECT * FROM mission WHERE droneID = \'" + str('000000003762bf30') + "\' AND state=0 ORDER BY missionID DESC"
 		mycursor.execute(sql)
 		myresult = mycursor.fetchall()
 		missionID = myresult[0][0]

@@ -68,6 +68,8 @@ os.rename('C:\\CMSTData\\' + str(missionID) +'\\DetectionFolder\\' + str(video_n
 
 '''
 
+
+'''
 #Store the data in the database for that region
 #INSERT INTO `detection`.`detectedobject` (`sightingUrl`, `objectNumber`, `property1Value`, `objectName`, `accuracy`, `url`) VALUES ('resources/sightings/163937_web11.jpg', '1', 'Loggerhead', 'Sea Turtle', '50', '/resources/wallpaper.jpg');
 #Connect to the database
@@ -130,3 +132,10 @@ sql += str('./CMSTData/' + str(missionID) +'/DetectionFolder/' + str(video_numbe
 mycursor.execute(sqlMain + sql)
 mydb.commit()
 
+'''
+
+from shutil import copyfile
+
+
+uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(20) + '\\' + 'ReceivedData\\' + str(0) + '.mp4'
+copyfile(MAIN_DIRECTORY + '\\' + str(20) + "\\ReceivedData\\" + str(0) + ".mp4", uiVideoLocation)
