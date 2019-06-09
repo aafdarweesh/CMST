@@ -78,11 +78,12 @@ def ReceiveVideo():
 		 
 	try:
 		#sleep(3) #as the decoding is working independent, this delay is to copy after the decoding process
-		uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(missionID) + '\\' + 'ReceivedData\\' + str(request.json['videoID']) + '.mp4'
+		uiVideoLocation = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(request.json['missionID']) + '\\' + 'ReceivedData\\' + str(request.json['videoID']) + '.mp4'
 		copyfile(MAIN_DIRECTORY + '\\' + str(request.json['missionID']) + "\\ReceivedData\\" + videoName + ".mp4", uiVideoLocation)
 		
-	except:
+	except Exception as e:
 		print('Failed copying the file into the UI directory')
+		print (str(e))
 		
 	#Read from the mission the received videos 
 	itemlist = []
