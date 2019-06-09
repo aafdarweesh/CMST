@@ -8,7 +8,8 @@ import os
 
 
 
-serialNumber = str(os.system('cat /proc/cpuinfo | grep Serial | cut -d \' \' -f 2'))
+serialNumber = os.popen('cat /proc/cpuinfo | grep Serial | cut -d \' \' -f 2').read()
+serialNumber = serialNumber.split('\n')[0]
 print('Serial Number of the Pi is : ' + serialNumber)
                    
 '''
@@ -49,7 +50,7 @@ def getNewMission():
             print("RPiClient get the new Mission : " + str(req.status_code) + " !!!")
         except Exception as e:
             print (str(e))
-            print("Couldn't connect to RPiServer to get the new Mission !!!")
+            print("Couldn't connect to RPiServer to get the new Mission !!! OR no New Mission Assigned!!!")
     
     runSystsem(data)
     
@@ -60,7 +61,7 @@ def runSystsem(data):
     videoDuration = 10 #video duration in sec
     numberOfVideos = data['NumberOfVideos']
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
-    ' & python ServerTransmission.py '  + str(data['missionID']) + ' ' + str(numberOfVideos)) + ' & python ConfirmReceivingMission.py'
+    ' & python ServerTransmission.py '  + str(data['missionID']) + ' ' + str(numberOfVideos) + ' & python ConfirmReceivingMission.py')
 
 
 if __name__ == '__main__':
