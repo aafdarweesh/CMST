@@ -312,7 +312,13 @@ def runProgramOnReceivedVideos():
 				
 				runningDetectionResults = runDetectionSystem(x) #run the detection system on that video (results are true of false "succeeded or not")
 				if (runningDetectionResults == True):
-					moveVideoToUI(x) #move the video to the ui location
+					
+					try:
+						moveVideoToUI(x) #move the video to the ui location
+					except Exception as e:
+						print('Couldnot move the video to the UI Rename')
+						print(e)
+						
 					listOfDetectedVideos.append(x) #add the video number to the detected videos
 				selectFrames(x) #select frames (eliminate redundant detections in the same region), then run the classification system
 			sleep(1)
