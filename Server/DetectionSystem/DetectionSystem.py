@@ -123,7 +123,7 @@ def ReceiveVideo():
 
 	sql = 'INSERT INTO detection.video (videoUrl, missionID, latitude, longitude, startingTime) VALUES ('
 	sql += '\''  + str('./CMSTData' + '/' + str(request.json['missionID']) + "/ReceivedData/" + videoName +'.mp4')
-	sql += '\',\'' + str(request.json['missionID']) + '\', ' + str(lat) + ',' + str(lng) + ',' + str(int(videoName)*10) +')'
+	sql += '\',\'' + str(request.json['missionID']) + '\', ' + str(lat) + ',' + str(lng) + ',' + str(int(videoName)*5) +')'
 		
 	mycursor.execute(sql)
 	mydb.commit()
@@ -247,7 +247,7 @@ def assignMission():
 
 	#insert the new mission to the database
 	sql = "INSERT INTO mission (missionID, username, droneID, pathID, length, numberOfVideos, state) VALUES "
-	sql += "(NULL, \'tommy\', \'" + str(request.json['serialNumber']) + "\', " + str(pathID) + ", 10, " 
+	sql += "(NULL, \'tommy\', \'" + str(request.json['serialNumber']) + "\', " + str(pathID) + ", 5, " 
 	sql += str(len(request.json['flightConfigurations']['videoLocations'])) + ", 0);"
 	print(sql)
 	mycursor.execute(sql)
@@ -348,9 +348,10 @@ def readNewMission():
 
 		mycursor = mydb.cursor()
 
+		#Main RaspberryPi serialNumber : request.json['serialNumber'] , '000000003762bf30'
 
 		#get the mission id 
-		sql = "SELECT * FROM mission WHERE droneID = \'" + str('000000003762bf30') + "\' AND state=0 ORDER BY missionID DESC"
+		sql = "SELECT * FROM mission WHERE droneID = \'" + str(request.json['serialNumber']) + "\' AND state=0 ORDER BY missionID DESC"
 		mycursor.execute(sql)
 		myresult = mycursor.fetchall()
 		missionID = myresult[0][0]

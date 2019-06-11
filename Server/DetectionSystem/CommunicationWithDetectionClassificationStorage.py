@@ -126,7 +126,7 @@ def selectFrames(video_number):
 	
 	
 	
-	number_of_regions = int(math.ceil(300/frames_in_region))
+	number_of_regions = int(math.ceil(150/frames_in_region)) #300 is the number of frames in 10sec 
 	
 	print('Limits are number of regions : ' + str(number_of_regions) + ' , number of frames in region : ' + str(frames_in_region))
 	
