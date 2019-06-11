@@ -28,7 +28,7 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 
-MAIN_DIRECTORY = 'C:\\CMSTData'
+MAIN_DIRECTORY = 'C:\\CMSTData' #main directory
 
 '''
 json file format that will be sent to the server to update the status
@@ -145,7 +145,7 @@ def assignMission():
 		print (data)
 		json.dump(data, outfile)
 
-	#create new Directory for the mission in the UI
+	#create new Directory for the mission in the UI (depending on the location of the UI)
 	newpathUI = 'C:\\ui_server\\htdocs\\Turtles\\CMSTData\\' + str(data['missionID'])
 	if not os.path.exists(newpathUI):
 		os.makedirs(newpathUI) #create the new mission directory (will store all data related to the mission there (images, videos, some meta files)
