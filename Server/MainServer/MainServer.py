@@ -57,20 +57,8 @@ def UpdateStatus():
             data['listOfReceivedVideos'] = itemlist
     except:
             print("Nothing in the file")
-	#directory = os.listdir("./ReceivedData")
-	#data['listOfReceivedVideos'] = directory
-
-	#for filename in directory:
-	#	data['listOfReceivedVideos'].append(int(filter(lambda x: x.isdigit(), filename)[0]))
-    '''
-	try :
-        storageData = requests.get(url + "/ListOfReceivedVideos")
-        data['listOfReceivedVideos'] = json.loads(storageData.text)['listOfReceivedVideos']
-        print("connected to the storage server!!!")
-    except :
-        print("Couldn't connect to the storage server!!!")
-    #print(jsonify(json.dumps(data)))
-	'''
+	
+	
     return json.dumps(data)
 
 
@@ -167,38 +155,7 @@ def assignMission():
 	
 	return jsonify(data)
 
-    #get the new mission details from the storage for the given RaspberryPi
-	'''
-	req = urllib.request.Request(url='http://StorageIP:8082/RetrieveMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
-
-	with urllib.request.urlopen(req) as f:
-	print(f.read().decode("utf-8"))
-	pass
-	'''
-	#newMission = data received from the StorageIP
-	#rPi = data received from the StorageIP
-
-
-	#encode the data
-	#uncomment if we are using VPN to connect with the Pi
-	'''
-	newMission = newMission.encode('ascii') # data should be bytes
-
-	req = urllib.request.Request(url='http://' + rPi.getIP() + ':8000/NewMission', data=data1, headers={'content-type': 'application/json'}, method='POST')
-	res = ''
-	with urllib.request.urlopen(req) as f:
-	res = f.read().decode("utf-8")
-	pass
-
-
-	if res == 'Valid Operation':
-	return 'Valid Operation'
-	else :
-	return res
-
-	'''
-
-	
+    
 	
 
 	
@@ -245,25 +202,7 @@ def readNewMission():
 	except:
 		return 'Couldn\'t connect to the DB new mission'
 	
-	#collect the mission from the database
-
-	'''
-
-	global MAIN_DIRECTORY
-	with open('Missions.txt') as json_file:
-		newMission = json.load(json_file)
-
-		#create new Directory for the mission
-		newpath = MAIN_DIRECTORY + '\\' + str(newMission['missionID'])
-		if not os.path.exists(newpath):
-				os.makedirs(newpath) #create the new mission directory (will store all data related to the mission there (images, videos, some meta files)
-				os.makedirs(newpath + '\\ReceivedData') #This directory will be used to store the received videos
-
-				with open(newpath + '\\ReceivedDataMetaData.txt', 'w'):
-						pass
-
-		return jsonify(newMission)
-	'''
+	
 	
 
 if __name__ == '__main__':
