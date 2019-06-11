@@ -30,7 +30,7 @@ def getNewMission():
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     flag = False
     while flag == False:
-        sleep(1) #sleep for 3 sec and send another request to the server, asking for the mission
+        sleep(3) #sleep for 3 sec and send another request to the server, asking for the mission
 
         try:
             req = requests.post(url+"/readNewMission", data=json.dumps(data), headers=headers)
@@ -58,7 +58,7 @@ def getNewMission():
     
 def runSystsem(data):
     print(data)
-    videoDuration = 10 #video duration in sec
+    videoDuration = 5 #video duration in sec
     numberOfVideos = data['NumberOfVideos']
     os.system('python ./StartRecording.py ' + str(videoDuration) + ' ' + str(numberOfVideos) +
     ' & python ServerTransmission.py '  + str(data['missionID']) + ' ' + str(numberOfVideos) + ' & python ConfirmReceivingMission.py')
