@@ -112,7 +112,7 @@ https://drive.google.com/open?id=1zR54pWELpCh46SZbTjuFEVBrV7V4D-1t
 ### Detection Program Documentation and Installation 
 Please check the following link for the Detection Program Documentation (How to install it, where to provide the dataset, how to train your model for detection, and finally how to run it):
 ```
-https://drive.google.com/open?id=1LvJ9HcigdZe54sGbTc5eh23nbFpXYRpD
+https://github.com/MuBadawy/Tensorflow-based-SeaTurtle-Detection
 ```
 
 
