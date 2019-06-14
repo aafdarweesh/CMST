@@ -1,0 +1,21 @@
+.statsContainer {
+	width:80%;
+	margin: 5vh auto;
+	background: rgba(47,79,79,0.75);
+	padding: 12px;
+	color: white;
+}
+
+span {
+	font-weight: bold;
+}
+
+#PieDiv {
+	width: 50%;
+	height: 50vh;
+	margin: 2vh auto;
+}
+
+.histo {
+	margin: 2vh auto;
+}

@@ -1,0 +1,28 @@
+.missionContainer {
+	width:80%;
+	margin: 5vh auto;
+	background: rgba(47,79,79,0.75);
+	padding: 5px;
+	color: white;
+}
+
+.subMissionContainer {
+	display: flex;
+}
+
+.subSubMissionContainer {
+	flex: 0 0 45%;
+}
+
+.pathMap {
+	height: 11em;
+	margin: 5px auto;
+	flex: 1;
+	border: 3px solid white;
+	border-radius: 5px;
+}
+
+.disabledAnchor {
+       pointer-events: none;
+       cursor: default;
+}
