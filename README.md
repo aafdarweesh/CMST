@@ -129,6 +129,7 @@ The database was implemented using MySQL. A dump of the database is at the DB fo
 **Operator** ( username , password, fname, lname, e-mail, address)
   Alternate key:
     - e-mail
+    
 **Mission** ( missionID , username (fk: Operator.username) , droneID (fk: Drone. droneID) , pathID
 (fk: Path.pathID) , starting time stamp, ending time stamp, video length, number of
 videos, state)
@@ -138,22 +139,37 @@ videos, state)
     - droneID, starting timestamp
     - droneID, ending timestamp
   Note: state is 0 when a mission is ready, 1 when it's running, and 2 when it's finished.
+  
 **Drone** ( droneID , specifications)
+
 **Path** ( pathID , areaID ( fk : Area.areaID) , number of steps)
+
 **Path Steps** ( pathID ( fk : Path.pathID) , step number , latitude, longitude)
+
 **Area** ( areaID , country, city, name of area)
+
 **Object Kind** ( object name , property1, property2)
+
 **Is found in** ( areaID ( fk : Area.areaID) , object name (fk: Object Kind.object name) )
+
 **Video** ( video url , missionID (fk: Mission.missionID) , video name, starting time, latitude,
 longitude)
+
   Alternate key:
+  
     - missionID, starting timestamp
+    
   Note: starting time is relative to the start of the mission (we use seconds in our implementation).
+  
 **Sighting** ( sighting url , video url (fk: Video.video url) , time of appearance, number of
 objects)
+
   Alternate key:
+  
     - Video url, time of appearance
+    
   Note: Time of appearance is the number of seconds from the start of the video until this sighting.
+  
 **Detected Object** ( sighting url (fk: sighting.sighting url) , object number , property1 value,
 property2 value, object name (fk: Object Kind.object name), accuracy (i.e. confidence) , url)
 
