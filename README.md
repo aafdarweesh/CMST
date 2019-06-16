@@ -127,17 +127,25 @@ https://drive.google.com/open?id=1UvaFrQvBPWi75JcrgXSkxyPTLsiFvjHX
 The database was implemented using MySQL. A dump of the database is at the DB folder. Note that the schema has some features that we didn't use like operator's profiles and areas. The schema can be briefly described as follows:
 
 **Operator** ( username , password, fname, lname, e-mail, address)
+
   Alternate key:
-    - e-mail
+  
+  - e-mail
     
 **Mission** ( missionID , username (fk: Operator.username) , droneID (fk: Drone. droneID) , pathID
 (fk: Path.pathID) , starting time stamp, ending time stamp, video length, number of
 videos, state)
+
   Alternate keys:
-    - username, starting timestamp
-    - username, ending timestamp
-    - droneID, starting timestamp
-    - droneID, ending timestamp
+  
+  - username, starting timestamp
+  
+  - username, ending timestamp
+  
+  - droneID, starting timestamp
+  
+  - droneID, ending timestamp
+  
   Note: state is 0 when a mission is ready, 1 when it's running, and 2 when it's finished.
   
 **Drone** ( droneID , specifications)
@@ -157,7 +165,7 @@ longitude)
 
   Alternate key:
   
-    - missionID, starting timestamp
+  - missionID, starting timestamp
     
   Note: starting time is relative to the start of the mission (we use seconds in our implementation).
   
@@ -166,7 +174,7 @@ objects)
 
   Alternate key:
   
-    - Video url, time of appearance
+  - Video url, time of appearance
     
   Note: Time of appearance is the number of seconds from the start of the video until this sighting.
   
