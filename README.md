@@ -182,6 +182,18 @@ objects)
 property2 value, object name (fk: Object Kind.object name), accuracy (i.e. confidence) , url)
 
 ### UI
+PHP is used for the backend, while Javascript, HTML, and CSS are used for the front end. The layout for the notification was obtained from https://www.jqueryscript.net/other/Simple-Yet-Fully-Customizable-jQuery-Notification-Plugin-notify.html. The instructions for running the UI are as follows:
+
+1. Launch the database schema on a MySQL server.
+2. Install Xampp.
+3. Inside the Xampp folder, go to the htdocs folder, delete everything and place the folder Turtles in there.
+4. Inside Turtles, open resources/db.php and enter the database connection credentials appropriately.
+5. In order to use the Javascript Google Maps API, you will need to obtain a key from Google. Once you have the key, go to each of the following files: findingsMap.php frame.php newPath.php resultsByMission.php, and insert your key in the links inside the statements where Google Maps is imported.
+6. Open resources/constants.php and specify the max flight time of the drone (in seconds), and the length of each transmitted video (this is, of course, originally decided by the communication system).
+7. In newMission.php, set the limits for the height and speed of the drone by changing the min and max attributes of the height and speed fields in the form.
+8. In newPath.php, at line 176, replace SERVER_ADRRESS:PORT with the address and port number on which new missions are received at the server side.
+9. Launch the Apache server from Xampp's control.
+
 
 
 ### Server Controller 
