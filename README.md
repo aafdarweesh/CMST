@@ -15,8 +15,9 @@ in real-time.
 
 
 Check system Demo :
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/MNfx6OTe8CU&t/0.jpg)]
 ```
-https://www.youtube.com/watch?v=MNfx6OTe8CU&t=17s
+https://www.youtube.com/watch?v=MNfx6OTe8CU&t
 ```
 
 
